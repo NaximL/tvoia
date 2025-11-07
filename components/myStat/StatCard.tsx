@@ -18,10 +18,9 @@ export const StatCard = ({ color, icon, title, subtitle }: any) => (
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    paddingVertical: 20,
+    paddingVertical: 12,
     paddingHorizontal: 18,
     borderRadius: 22,
-    margin: 8,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.25,

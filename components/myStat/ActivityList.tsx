@@ -1,6 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+
+const gradeColorLight: Record<string, string> = {
+  Н: "#FF3B30",
+  "Н/О": "#FF6F00",
+  "Н/А": "#999999",
+  0: "#FF6F00",
+  1: "#FFB300",
+  2: "#FFC233",
+  3: "#FFD966",
+  4: "#FFEFAA",
+  5: "#FAFFD8",
+  6: "#C8E37A",
+  7: "#C8E37A",
+  8: "#A0D755",
+  9: "#A0D755",
+  10: "#69C835",
+  11: "#69C835",
+  12: "#30C759",
+};
 
 const activities = [
   {
@@ -9,7 +28,6 @@ const activities = [
     subject: 'Створення гаджетів на Arduino',
     type: 'Екзамен',
     grade: 12,
-    color: '#6C63FF',
   },
   {
     id: '2',
@@ -17,7 +35,6 @@ const activities = [
     subject: 'Відео лабораторія',
     type: 'Робота в класі',
     grade: 10,
-    color: '#00B894',
   },
   {
     id: '3',
@@ -25,7 +42,6 @@ const activities = [
     subject: 'Фізика — рух тіла',
     type: 'Контрольна робота',
     grade: 8,
-    color: '#F24E1E',
   },
 ];
 
@@ -36,10 +52,9 @@ export const ActivityList = () => (
       <Ionicons name="chevron-forward" size={26} color="#fff" />
     </View>
 
-    <FlatList
-      data={activities}
-      keyExtractor={(item) => item.id}
-      renderItem={({ item, index }) => (
+    {activities.map((item, index) => {
+      const color = gradeColorLight[item.grade] || '#6C63FF';
+      return (
         <View key={index} style={styles.item}>
           <View>
             <Text style={styles.date}>{item.date}</Text>
@@ -47,12 +62,12 @@ export const ActivityList = () => (
             <Text style={styles.type}>{item.type}</Text>
           </View>
 
-          <View style={[styles.gradeBadge, { backgroundColor: item.color }]}>
+          <View style={[styles.gradeBadge, { backgroundColor: color }]}>
             <Text style={styles.gradeText}>{item.grade}</Text>
           </View>
         </View>
-      )}
-    />
+      );
+    })}
   </View>
 );
 
@@ -74,16 +89,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 12,
     letterSpacing: 0.3,
-  },
-  pointsRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    gap: 20,
-    marginBottom: 20,
-  },
-  iconText: {
-    color: '#aaa',
-    fontSize: 14,
   },
   item: {
     flexDirection: 'row',
@@ -109,8 +114,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
   },
   gradeBadge: {
-    width: 46,
-    height: 46,
+    width: 42,
+    height: 42,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',

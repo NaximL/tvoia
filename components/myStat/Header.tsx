@@ -1,24 +1,61 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useGstyle } from '@/Colors';
 
-export const Header = () => (
-  <View style={styles.header}>
-    <Text style={styles.title}>MyStat</Text>
-    {/* <View style={styles.icons}>
 
-      <TouchableOpacity style={{ marginLeft: 16 }}>
-        <Ionicons name="notifications-outline" size={28} color="#ccc" />
-        <Text style={styles.notif}>
-          1
-        </Text>
+export const Header = ({ editMode, setEditMode }: any) => {
+  const { gstyles, isDark } = useGstyle();
+
+  return (
+    <View style={styles.header}>
+      <Text style={[styles.title, gstyles.color]}>Статистика</Text>
+
+      <TouchableOpacity
+        onPress={() => setEditMode((prev: boolean) => !prev)}
+        style={[
+          styles.editButton,
+          { backgroundColor: '#5151512e' },
+        ]}
+      >
+        <Ionicons
+          name={editMode ? 'checkmark' : 'swap-vertical-outline'}
+          size={22}
+          color="white"
+        />
+        <View
+          style={{
+            position: 'absolute',
+            top: 1,
+            left: 1,
+            width: '100%',
+            height: '100%',
+            borderTopWidth: 0.5,
+            borderLeftWidth: 0.5,
+            borderColor: 'rgba(87, 87, 95, 0.5)',
+            borderTopLeftRadius: 40,
+            zIndex: 2,
+
+          }}
+        />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 1,
+            right: 1,
+            width: '100%',
+            height: '100%',
+            borderBottomWidth: 0.5,
+            borderRightWidth: 0.5,
+            borderColor: 'rgba(87, 87, 95, 0.5)',
+            borderBottomRightRadius: 80,
+            zIndex: 2
+          }}
+        />
       </TouchableOpacity>
-      <TouchableOpacity style={[{ marginLeft: 16, }, styles.avatar]}>
-        <Ionicons name="settings-outline" size={28} color="#ccc" />
-      </TouchableOpacity>
-    </View> */}
-  </View>
-);
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   header: {
@@ -33,24 +70,10 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: 'white',
   },
-  icons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  notif: {
-    position:"absolute",
-    right:-7,
-    bottom:-5,
-    color:"white",
-    backgroundColor:"red",
-    paddingInline:5,
-    paddingHorizontal:5,
-    borderRadius:'50%'
-  },  
-  avatar: {
-    width: 34,
-    // height: 34,
-    borderRadius: 17,
-    marginLeft: 16,
+  editButton: {
+    padding: 12,
+    borderRadius: "50%",
+    zIndex: 0
   },
 });
+
