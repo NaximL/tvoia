@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,7 +13,17 @@ import { ActivityList } from '@/components/myStat/ActivityList';
 import { useGstyle } from '@/Colors';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import Animated, { Layout, ZoomIn, ZoomOut } from 'react-native-reanimated';
+import Animated, {
+  Layout,
+  ZoomIn,
+  ZoomOut,
+  useSharedValue,
+  useAnimatedStyle,
+  withRepeat,
+  withSequence,
+  withTiming,
+  cancelAnimation,
+} from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 
@@ -21,6 +31,58 @@ export default function Index() {
   const { backgroundColor } = useGstyle();
   const [refreshing, setRefreshing] = useState(false);
   const [editMode, setEditMode] = useState(false);
+
+  // 🌀 натуральне "ходіння" — обертання + легкий рух X/Y
+  const rotation = useSharedValue(0);
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+
+  useEffect(() => {
+    if (editMode) {
+      const delay = Math.random() * 300;
+      setTimeout(() => {
+        rotation.value = withRepeat(
+          withSequence(
+            withTiming(-1.3, { duration: 120 }),
+            withTiming(1.3, { duration: 140 })
+          ),
+          -1,
+          true
+        );
+        translateX.value = withRepeat(
+          withSequence(
+            withTiming(-0.6, { duration: 220 }),
+            withTiming(0.6,{ duration: 250 })
+          ),
+          -1,
+          true
+        );
+        translateY.value = withRepeat(
+          withSequence(
+            withTiming(-0.6, { duration: 200 }),
+            withTiming(0.6, { duration: 240 })
+          ),
+          -1,
+          true
+        );
+      }, delay);
+    } else {
+      cancelAnimation(rotation);
+      cancelAnimation(translateX);
+      cancelAnimation(translateY);
+      rotation.value = withTiming(0, { duration: 200 });
+      translateX.value = withTiming(0, { duration: 200 });
+      translateY.value = withTiming(0, { duration: 200 });
+    }
+  }, [editMode]);
+
+  const wiggleStyle = useAnimatedStyle(() => ({
+    transform: [
+      { rotate: `${rotation.value}deg` },
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+    ],
+  }));
 
   const [items, setItems] = useState([
     {
@@ -71,12 +133,16 @@ export default function Index() {
   };
 
   const renderItem = ({ item, drag, isActive }: any) => (
-    <ScaleDecorator>
+    <ScaleDecorator key={item.key}>
       <Animated.View
         entering={ZoomIn.springify()}
         exiting={ZoomOut.springify()}
         layout={Layout.springify()}
-        style={[styles.wrapper, { opacity: isActive ? 0.8 : 1 }]}
+        style={[
+          styles.wrapper,
+          wiggleStyle,
+          { opacity: isActive ? 0.8 : 1 },
+        ]}
       >
         <Pressable
           disabled={!editMode}
@@ -87,11 +153,25 @@ export default function Index() {
             }
           }}
         >
-          {item.type === 'widget' && <Widget {...item} />}
+          {item.type === 'widget' && (
+            <Widget
+              One={item.One}
+              Two={item.Two}
+              Textc={item.Textc}
+              Value={item.Value}
+              Icon={item.Icon}
+            />
+          )}
           {item.type === 'statsGroup' && (
             <View style={styles.statsRow}>
-              {item.stats.map((s: any, i: number) => (
-                <StatCard key={i} {...s} />
+              {item.stats.map((s: any, i: any) => (
+                <StatCard
+                  key={i}
+                  color={s.color}
+                  icon={s.icon}
+                  title={s.title}
+                  subtitle={s.subtitle}
+                />
               ))}
             </View>
           )}
@@ -102,10 +182,12 @@ export default function Index() {
   );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={[styles.container, { backgroundColor }]}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
+      <SafeAreaView style={{ flex: 1 }}>
         <Header editMode={editMode} setEditMode={setEditMode} />
+
         <DraggableFlatList
+          style={{marginTop:10}}
           data={items}
           onDragEnd={({ data }) => setItems(data)}
           keyExtractor={(item) => item.key}
@@ -121,12 +203,13 @@ export default function Index() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  wrapper: { marginVertical: 4 },
+  wrapper: {
+    marginVertical: 6,
+    marginHorizontal: 10,
+  },
   statsRow: {
     flexDirection: 'row',
     marginHorizontal: 16,
-    marginTop: 12,
     gap: 12,
   },
 });

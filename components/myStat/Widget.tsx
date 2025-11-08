@@ -38,7 +38,6 @@ export const Widget = ({ One, Two, Textc, Value, Icon = "text" }: Props) => (
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 20,
     marginHorizontal: 16,
     borderRadius: 24,
     shadowOpacity: 0.3,

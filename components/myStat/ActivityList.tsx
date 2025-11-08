@@ -45,38 +45,42 @@ const activities = [
   },
 ];
 
-export const ActivityList = () => (
-  <View style={styles.container}>
-    <View style={{ flexDirection: "row" }}>
-      <Text style={styles.title}>Оцінки</Text>
-      <Ionicons name="chevron-forward" size={26} color="#fff" />
+export const ActivityList = () => {
+
+  return (
+    <View style={styles.container}>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={styles.title}>Оцінки</Text>
+        <Ionicons name="chevron-forward" size={26} color="#fff" />
+      </View>
+
+      {activities.map((item, index) => {
+        const color = gradeColorLight[item.grade] || '#6C63FF';
+        return (
+          <View key={index} style={styles.item}>
+            <View style={{width:'85%'}}>
+              <Text style={styles.date}>{item.date}</Text>
+              <Text style={styles.subject} >
+                {item.subject}
+              </Text>
+              <Text style={styles.type}>{item.type}</Text>
+            </View>
+
+            <View style={[styles.gradeBadge, { backgroundColor: color }]}>
+              <Text style={styles.gradeText}>{item.grade}</Text>
+            </View>
+          </View>
+        );
+      })}
     </View>
-
-    {activities.map((item, index) => {
-      const color = gradeColorLight[item.grade] || '#6C63FF';
-      return (
-        <View key={index} style={styles.item}>
-          <View>
-            <Text style={styles.date}>{item.date}</Text>
-            <Text style={styles.subject}>{item.subject}</Text>
-            <Text style={styles.type}>{item.type}</Text>
-          </View>
-
-          <View style={[styles.gradeBadge, { backgroundColor: color }]}>
-            <Text style={styles.gradeText}>{item.grade}</Text>
-          </View>
-        </View>
-      );
-    })}
-  </View>
-);
+  )
+};
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#1C1C1E',
     borderRadius: 24,
     marginHorizontal: 16,
-    marginVertical: 20,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
