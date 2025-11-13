@@ -6,7 +6,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import { Header } from '@/components/myStat/Header';
+import { Header } from '@/components/ui/Header';
 import { Widget } from '@/components/myStat/Widget';
 import { StatCard } from '@/components/myStat/StatCard';
 import { ActivityList } from '@/components/myStat/ActivityList';
@@ -32,10 +32,29 @@ export default function Index() {
   const [refreshing, setRefreshing] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
-  // 🌀 натуральне "ходіння" — обертання + легкий рух X/Y
   const rotation = useSharedValue(0);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+
+
+
+  const menuItems = [
+    {
+      icon: 'arrow.up.arrow.down',
+      text: editMode ? 'Готово' : 'Змінити порядок',
+      action: () => { setEditMode(!editMode); },
+    },
+    {
+      icon: 'plus',
+      text: 'Додати',
+      action: () => { alert('Додати виджети'); },
+    },
+    {
+      icon: 'gear',
+      text: 'Налаштування',
+      action: () => { alert('Налаштування виджетів'); },
+    },
+  ];
 
   useEffect(() => {
     if (editMode) {
@@ -51,16 +70,16 @@ export default function Index() {
         );
         translateX.value = withRepeat(
           withSequence(
-            withTiming(-0.6, { duration: 220 }),
-            withTiming(0.6,{ duration: 250 })
+            withTiming(-0.8, { duration: 220 }),
+            withTiming(0.8, { duration: 250 })
           ),
           -1,
           true
         );
         translateY.value = withRepeat(
           withSequence(
-            withTiming(-0.6, { duration: 200 }),
-            withTiming(0.6, { duration: 240 })
+            withTiming(-0.8, { duration: 200 }),
+            withTiming(0.8, { duration: 240 })
           ),
           -1,
           true
@@ -149,6 +168,7 @@ export default function Index() {
           onLongPress={() => {
             if (editMode) {
               Haptics.selectionAsync();
+
               drag();
             }
           }}
@@ -184,10 +204,10 @@ export default function Index() {
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
       <SafeAreaView style={{ flex: 1 }}>
-        <Header editMode={editMode} setEditMode={setEditMode} />
+        <Header Textheader='Статистика' menuItems={menuItems}/>
 
         <DraggableFlatList
-          style={{marginTop:10}}
+          style={{ marginTop: 10 }}
           data={items}
           onDragEnd={({ data }) => setItems(data)}
           keyExtractor={(item) => item.key}
@@ -205,7 +225,6 @@ export default function Index() {
 const styles = StyleSheet.create({
   wrapper: {
     marginVertical: 6,
-    marginHorizontal: 10,
   },
   statsRow: {
     flexDirection: 'row',

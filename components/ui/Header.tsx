@@ -11,31 +11,17 @@ import {
 import { useGstyle } from '@/Colors';
 import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconSymbol } from '@/components/ui/icon-symbol.ios'; // путь к твоему компоненту IconSymbol
-
-export const Header = ({ editMode, setEditMode }: any) => {
+import { IconSymbol } from '@/components/ui/icon-symbol.ios';
+type Props = {
+  Textheader: string,
+  menuItems: any
+}
+export const Header = ({Textheader,menuItems}: Props) => {
   const { gstyles, isDark } = useGstyle();
   const insets = useSafeAreaInsets();
   const [menuVisible, setMenuVisible] = useState(false);
   const [selectedIcon, setSelectedIcon] = useState<Parameters<typeof IconSymbol>[0]['name']>('ellipsis');
 
-  const menuItems = [
-    {
-      icon: 'arrow.up.arrow.down',
-      text: editMode ? 'Готово' : 'Змінити порядок',
-      action: () => { setEditMode(!editMode); },
-    },
-    {
-      icon: 'plus',
-      text: 'Додати',
-      action: () => { alert('Додати виджети'); },
-    },
-    {
-      icon: 'gear',
-      text: 'Налаштування',
-      action: () => { alert('Налаштування виджетів'); },
-    },
-  ];
 
   const containerAnim = useRef(new Animated.Value(0)).current;
   const itemAnims = useRef<Animated.Value[]>(menuItems.map(() => new Animated.Value(0))).current;
@@ -98,7 +84,7 @@ export const Header = ({ editMode, setEditMode }: any) => {
         translateX: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [50, 0] }),
       },
       {
-        translateY: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [-30, 0] }),
+        translateY: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [-30, 3] }),
       },
     ],
     opacity: containerAnim,
@@ -110,7 +96,7 @@ export const Header = ({ editMode, setEditMode }: any) => {
       tint={isDark ? 'dark' : 'light'}
       style={styles.header}
     >
-      <Text style={[styles.title, gstyles.color]}>Статистика</Text>
+      <Text style={[styles.title, gstyles.color]}>{Textheader}</Text>
 
       <View style={{ position: 'relative' }}>
         <TouchableOpacity onPress={toggleMenu} style={styles.editButton}>
@@ -120,7 +106,7 @@ export const Header = ({ editMode, setEditMode }: any) => {
               position: 'absolute',
               top: 0,
               left: 0,
-              width: '100%',
+              width: '95%',
               height: '100%',
               borderTopWidth: 0.5,
               borderLeftWidth: 0.5,
@@ -135,7 +121,7 @@ export const Header = ({ editMode, setEditMode }: any) => {
               position: 'absolute',
               bottom: 0,
               right: 0,
-              width: '100%',
+              width: '95%',
               height: '100%',
               borderBottomWidth: 0.5,
               borderRightWidth: 0.5,
@@ -147,36 +133,51 @@ export const Header = ({ editMode, setEditMode }: any) => {
         </TouchableOpacity>
 
         {menuVisible && (
-          <Animated.View style={[styles.dropdownContainer, containerStyle]}>
-            <BlurView intensity={60} tint={isDark ? 'dark' : 'light'} style={styles.dropdown}>
-              {menuItems.map((item, i) => {
-                const itemStyle = {
-                  opacity: itemAnims[i],
-                  transform: [
-                    { translateY: itemAnims[i].interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
-                  ],
-                };
-                return (
-                  <React.Fragment key={i}>
-                    <Animated.View style={itemStyle}>
-                      <Pressable
-                        style={styles.menuItem}
-                        onPress={() => {
-                          item.action();
-                          toggleMenu();
-                        }}
-                      >
-                        {/*@ts-ignore*/}
-                        <IconSymbol name={item.icon} size={20} color="white" style={{ marginRight: 12 }} />
-                        <Text style={styles.menuText}>{item.text}</Text>
-                      </Pressable>
-                    </Animated.View>
-                    {i < menuItems.length - 1 && <View style={styles.divider} />}
-                  </React.Fragment>
-                );
-              })}
-            </BlurView>
-          </Animated.View>
+          <>
+
+            <Pressable
+              onPress={toggleMenu}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                zIndex: 99,
+              }}
+            />
+
+            <Animated.View style={[styles.dropdownContainer, containerStyle]}>
+              <BlurView intensity={60} tint={isDark ? 'dark' : 'light'} style={styles.dropdown}>
+                {menuItems.map((item: any, i: any) => {
+                  const itemStyle = {
+                    opacity: itemAnims[i],
+                    transform: [
+                      { translateY: itemAnims[i].interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
+                    ],
+                  };
+                  return (
+                    <React.Fragment key={i}>
+                      <Animated.View style={itemStyle}>
+                        <Pressable
+                          style={styles.menuItem}
+                          onPress={() => {
+                            item.action();
+                            toggleMenu();
+                          }}
+                        >
+                          {/*@ts-ignore*/}
+                          <IconSymbol name={item.icon} size={20} color="white" style={{ marginRight: 12 }} />
+                          <Text style={styles.menuText}>{item.text}</Text>
+                        </Pressable>
+                      </Animated.View>
+                      {i < menuItems.length - 1 && <View style={styles.divider} />}
+                    </React.Fragment>
+                  );
+                })}
+              </BlurView>
+            </Animated.View>
+          </>
         )}
       </View>
     </BlurView>
@@ -193,14 +194,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     // height: 70,
+    marginTop: 24,
   },
   title: {
-    fontSize: 34,
+    fontSize: 28,
     fontWeight: '700',
     color: 'white',
   },
   editButton: {
-    padding: 12,
+    padding: 10,
     borderRadius: 50,
     backgroundColor: 'rgba(39,39,47,0.8)',
   },
@@ -220,6 +222,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 12,
     elevation: 10,
+    borderWidth: 0.3,
+    borderColor: 'rgba(255,255,255,0.2)'
   },
   menuItem: {
     paddingVertical: 12,
