@@ -7,9 +7,9 @@ import {
   Pressable,
 } from 'react-native';
 import { Header } from '@/components/ui/Header';
-import { Widget } from '@/components/myStat/Widget';
-import { StatCard } from '@/components/myStat/StatCard';
-import { ActivityList } from '@/components/myStat/ActivityList';
+import { Widget } from '@/components/Pages/Statistics/Widget';
+import { StatCard } from '@/components/Pages/Statistics/StatCard';
+import { ActivityList } from '@/components/Pages/Statistics/ActivityList';
 import { useGstyle } from '@/Colors';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -26,38 +26,28 @@ import Animated, {
 } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import { useRouter } from 'expo-router';
+import useDragStore from '@/store/DragStore';
+import { BlurView } from 'expo-blur';
+import BackGraund from '@/components/Global/BackGraund';
 
 export default function Index() {
   const { backgroundColor } = useGstyle();
   const [refreshing, setRefreshing] = useState(false);
-  const [editMode, setEditMode] = useState(false);
 
+  const { Drag } = useDragStore()
+
+  const router = useRouter();
   const rotation = useSharedValue(0);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
 
 
-  const menuItems = [
-    {
-      icon: 'arrow.up.arrow.down',
-      text: editMode ? 'Готово' : 'Змінити порядок',
-      action: () => { setEditMode(!editMode); },
-    },
-    {
-      icon: 'plus',
-      text: 'Додати',
-      action: () => { alert('Додати виджети'); },
-    },
-    {
-      icon: 'gear',
-      text: 'Налаштування',
-      action: () => { alert('Налаштування виджетів'); },
-    },
-  ];
+
 
   useEffect(() => {
-    if (editMode) {
+    if (Drag) {
       const delay = Math.random() * 300;
       setTimeout(() => {
         rotation.value = withRepeat(
@@ -93,7 +83,7 @@ export default function Index() {
       translateX.value = withTiming(0, { duration: 200 });
       translateY.value = withTiming(0, { duration: 200 });
     }
-  }, [editMode]);
+  }, [Drag]);
 
   const wiggleStyle = useAnimatedStyle(() => ({
     transform: [
@@ -164,9 +154,9 @@ export default function Index() {
         ]}
       >
         <Pressable
-          disabled={!editMode}
+          disabled={!Drag}
           onLongPress={() => {
-            if (editMode) {
+            if (Drag) {
               Haptics.selectionAsync();
 
               drag();
@@ -195,30 +185,30 @@ export default function Index() {
               ))}
             </View>
           )}
-          {item.type === 'activity' && <ActivityList />}
+          {item.type === 'activity' && <ActivityList router={router} />}
         </Pressable>
       </Animated.View>
     </ScaleDecorator>
   );
 
   return (
-    <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
-      <SafeAreaView style={{ flex: 1 }}>
-        <Header Textheader='Статистика' menuItems={menuItems}/>
-
+    <>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
         <DraggableFlatList
-          style={{ marginTop: 10 }}
+          style={{ paddingTop: 10 }}
           data={items}
           onDragEnd={({ data }) => setItems(data)}
           keyExtractor={(item) => item.key}
           renderItem={renderItem}
-          activationDistance={editMode ? 1 : 9999}
+          activationDistance={Drag ? 1 : 9999}
           refreshControl={
             <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
           }
         />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+
+      </GestureHandlerRootView>
+      <BackGraund />
+    </>
   );
 }
 

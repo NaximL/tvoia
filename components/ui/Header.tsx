@@ -1,56 +1,32 @@
-import React, { useState, useRef } from 'react';
+import { useGstyle } from '@/Colors';
+import { IconSymbol } from '@/components/ui/icon/Ios';
+import { BlurView } from 'expo-blur';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  View,
+  Animated,
+  Easing,
+  Pressable,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  StyleSheet,
-  Animated,
-  Pressable,
-  Easing,
+  View,
 } from 'react-native';
-import { useGstyle } from '@/Colors';
-import { BlurView } from 'expo-blur';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { IconSymbol } from '@/components/ui/icon-symbol.ios';
-type Props = {
-  Textheader: string,
-  menuItems: any
-}
-export const Header = ({Textheader,menuItems}: Props) => {
-  const { gstyles, isDark } = useGstyle();
-  const insets = useSafeAreaInsets();
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [selectedIcon, setSelectedIcon] = useState<Parameters<typeof IconSymbol>[0]['name']>('ellipsis');
+import * as Haptics from 'expo-haptics';
 
+type Props = {
+  menuItems: any;
+  menuvis: boolean;
+  menuset: (state: boolean) => void
+}
+export const Header = ({ menuItems, menuvis, menuset }: Props) => {
+  const { gstyles, isDark } = useGstyle();
 
   const containerAnim = useRef(new Animated.Value(0)).current;
   const itemAnims = useRef<Animated.Value[]>(menuItems.map(() => new Animated.Value(0))).current;
 
-  const toggleMenu = () => {
-    if (menuVisible) {
-      Animated.parallel([
-        Animated.timing(containerAnim, {
-          toValue: 0,
-          duration: 200,
-          useNativeDriver: true,
-          easing: Easing.in(Easing.ease),
-        }),
-        Animated.stagger(
-          30,
-          itemAnims
-            .map(anim =>
-              Animated.timing(anim, {
-                toValue: 0,
-                duration: 150,
-                useNativeDriver: true,
-                easing: Easing.in(Easing.ease),
-              })
-            )
-            .reverse()
-        ),
-      ]).start(() => setMenuVisible(false));
-    } else {
-      setMenuVisible(true);
+  useEffect(() => {
+    if (menuvis) {
+
       containerAnim.setValue(0);
       itemAnims.forEach(anim => anim.setValue(0));
 
@@ -72,16 +48,35 @@ export const Header = ({Textheader,menuItems}: Props) => {
           })
         )
       ).start();
+    } else {
+      Animated.parallel([
+        Animated.timing(containerAnim, {
+          toValue: 0,
+          duration: 200,
+          useNativeDriver: true,
+          easing: Easing.in(Easing.ease),
+        }),
+        Animated.stagger(
+          30,
+          itemAnims
+            .map(anim =>
+              Animated.timing(anim, {
+                toValue: 0,
+                duration: 150,
+                useNativeDriver: true,
+                easing: Easing.in(Easing.ease),
+              })
+            )
+            .reverse()
+        ),
+      ]).start();
     }
-  };
+  }, [menuvis]);
 
   const containerStyle = {
     transform: [
       {
         scale: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [0.4, 1] }),
-      },
-      {
-        translateX: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [50, 0] }),
       },
       {
         translateY: containerAnim.interpolate({ inputRange: [0, 1], outputRange: [-30, 3] }),
@@ -91,138 +86,51 @@ export const Header = ({Textheader,menuItems}: Props) => {
   };
 
   return (
-    <BlurView
-      intensity={40}
-      tint={isDark ? 'dark' : 'light'}
-      style={styles.header}
-    >
-      <Text style={[styles.title, gstyles.color]}>{Textheader}</Text>
-
-      <View style={{ position: 'relative' }}>
-        <TouchableOpacity onPress={toggleMenu} style={styles.editButton}>
-          <IconSymbol name={selectedIcon} size={26} color="white" />
-          <View
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '95%',
-              height: '100%',
-              borderTopWidth: 0.5,
-              borderLeftWidth: 0.5,
-              borderColor: 'rgba(87, 87, 95, 0.5)',
-              borderTopLeftRadius: 40,
-              zIndex: 2,
-
-            }}
-          />
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 0,
-              right: 0,
-              width: '95%',
-              height: '100%',
-              borderBottomWidth: 0.5,
-              borderRightWidth: 0.5,
-              borderColor: 'rgba(87, 87, 95, 0.5)',
-              borderBottomRightRadius: 80,
-              zIndex: 2
-            }}
-          />
-        </TouchableOpacity>
-
-        {menuVisible && (
-          <>
-
-            <Pressable
-              onPress={toggleMenu}
-              style={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: '100%',
-                height: '100%',
-                zIndex: 99,
-              }}
-            />
-
-            <Animated.View style={[styles.dropdownContainer, containerStyle]}>
-              <BlurView intensity={60} tint={isDark ? 'dark' : 'light'} style={styles.dropdown}>
-                {menuItems.map((item: any, i: any) => {
-                  const itemStyle = {
-                    opacity: itemAnims[i],
-                    transform: [
-                      { translateY: itemAnims[i].interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
-                    ],
-                  };
-                  return (
-                    <React.Fragment key={i}>
-                      <Animated.View style={itemStyle}>
-                        <Pressable
-                          style={styles.menuItem}
-                          onPress={() => {
-                            item.action();
-                            toggleMenu();
-                          }}
-                        >
-                          {/*@ts-ignore*/}
-                          <IconSymbol name={item.icon} size={20} color="white" style={{ marginRight: 12 }} />
-                          <Text style={styles.menuText}>{item.text}</Text>
-                        </Pressable>
-                      </Animated.View>
-                      {i < menuItems.length - 1 && <View style={styles.divider} />}
-                    </React.Fragment>
-                  );
-                })}
-              </BlurView>
-            </Animated.View>
-          </>
-        )}
-      </View>
-    </BlurView>
+    <>
+      <Animated.View style={[styles.dropdownContainer, containerStyle]}>
+        <View style={styles.dropdown}>
+          {menuItems.map((item: any, i: any) => {
+            const itemStyle = {
+              opacity: itemAnims[i],
+              transform: [
+                { translateY: itemAnims[i].interpolate({ inputRange: [0, 1], outputRange: [10, 0] }) },
+              ],
+            };
+            return (
+              <Animated.View key={i} style={itemStyle}>
+                <TouchableOpacity activeOpacity={0.3} style={styles.menuItem} onPress={() => { item.action(); Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); }}>
+                  <Text style={styles.menuText}>{item.text}</Text>
+                  <IconSymbol name={item.icon} size={20} color="black" style={{ marginRight: 12 }} />
+                </TouchableOpacity>
+                {i < menuItems.length - 1 && <View style={styles.divider} />}
+              </Animated.View>
+            );
+          })}
+        </View>
+      </Animated.View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  header: {
-    zIndex: 100,
-    marginHorizontal: 16,
-    borderRadius: 18,
-    // paddingHorizontal: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // height: 70,
-    marginTop: 24,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: '700',
-    color: 'white',
-  },
-  editButton: {
-    padding: 10,
-    borderRadius: 50,
-    backgroundColor: 'rgba(39,39,47,0.8)',
-  },
   dropdownContainer: {
     position: 'absolute',
-    top: 50,
-    right: 0,
+    top: 40,
+    width: '100%',
+    alignItems: "center",
     zIndex: 100,
   },
   dropdown: {
     borderRadius: 16,
     overflow: 'hidden',
-    minWidth: 200,
-    paddingVertical: 4,
+    minWidth: 210,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.25,
     shadowRadius: 12,
     elevation: 10,
     borderWidth: 0.3,
+    backgroundColor: "#fff",
     borderColor: 'rgba(255,255,255,0.2)'
   },
   menuItem: {
@@ -230,14 +138,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: "space-between"
   },
   menuText: {
-    color: 'white',
+    color: 'black',
     fontSize: 16,
+    fontWeight: 500
   },
   divider: {
-    height: 0.5,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    marginHorizontal: 16,
+    height: 0.3,
+    backgroundColor: 'rgb(152, 152, 152)',
   },
 });

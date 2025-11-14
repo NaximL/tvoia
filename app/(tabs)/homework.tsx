@@ -7,13 +7,12 @@ import {
   StyleSheet,
   Pressable,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Animated, { Layout, ZoomIn, ZoomOut } from 'react-native-reanimated';
 import { useGstyle } from '@/Colors';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
-import { Header } from '@/components/ui/Header';
 import { LinearGradient } from 'expo-linear-gradient';
+import BackGraund from '@/components/Global/BackGraund';
 
 const Homework = () => {
   const { backgroundColor, isDark } = useGstyle();
@@ -55,7 +54,7 @@ const Homework = () => {
     'Фізика': { One: '#9C27B0', Two: '#BA68C8' },
     'Історія': { One: '#FF5722', Two: '#FF8A65' },
     'Географія': { One: '#00BCD4', Two: '#26C6DA' },
-    'Англійська': { One: '#B388FF', Two: '#8C9EFF' }, 
+    'Англійська': { One: '#B388FF', Two: '#8C9EFF' },
     'Українська': { One: '#FBC02D', Two: '#e6d960' },
     'Зар. література': { One: '#FFB74D', Two: '#FFCC80' },
     'Фізкультура': { One: '#43A047', Two: '#81C784' },
@@ -198,8 +197,7 @@ const Homework = () => {
   };
 
   return (
-    <SafeAreaView style={{ backgroundColor }}>
-      <Header Textheader="Домашнє завдання" menuItems={menuItems} />
+    <View style={{ backgroundColor }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -212,7 +210,8 @@ const Homework = () => {
           </React.Fragment>
         ))}
       </ScrollView>
-    </SafeAreaView>
+      <BackGraund />
+    </View>
   );
 };
 

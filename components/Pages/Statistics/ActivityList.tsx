@@ -1,6 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Router } from 'expo-router';
+import { useGstyle } from '@/Colors';
 
 const gradeColorLight: Record<string, string> = {
   Н: "#FF3B30",
@@ -45,20 +47,20 @@ const activities = [
   },
 ];
 
-export const ActivityList = () => {
-
+export const ActivityList = ({ router }: { router: Router }) => {
+  const {gstyles} = useGstyle();
   return (
-    <View style={styles.container}>
-      <View style={{ flexDirection: "row" }}>
+    <View style={[styles.container,gstyles.widgetColor]}>
+      <Pressable style={{ flexDirection: "row" }} onPress={()=>router.push("/diary")}>
         <Text style={styles.title}>Оцінки</Text>
         <Ionicons name="chevron-forward" size={26} color="#fff" />
-      </View>
+      </Pressable>
 
       {activities.map((item, index) => {
         const color = gradeColorLight[item.grade] || '#6C63FF';
         return (
           <View key={index} style={styles.item}>
-            <View style={{width:'85%'}}>
+            <View style={{ width: '85%' }}>
               <Text style={styles.date}>{item.date}</Text>
               <Text style={styles.subject} >
                 {item.subject}
@@ -78,7 +80,6 @@ export const ActivityList = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#1C1C1E',
     borderRadius: 24,
     marginHorizontal: 16,
     padding: 20,
