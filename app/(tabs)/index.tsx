@@ -28,6 +28,8 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import useDragStore, { useDropStore } from '@/store/DragStore';
+import { Header } from '@/components/ui/Header';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 
@@ -38,7 +40,7 @@ export default function Index() {
   const { backgroundColor } = useGstyle();
   const [refreshing, setRefreshing] = useState(false);
 
-  const { Drag } = useDragStore()
+  const { Drag, setDrag } = useDragStore()
 
   const router = useRouter();
   const rotation = useSharedValue(0);
@@ -193,25 +195,37 @@ export default function Index() {
       </Animated.View>
     </ScaleDecorator>
   );
-  const [selectedIndex, setSelectedIndex] = useState(0);
+
   return (
     <>
-      <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor, }}>
+        <Header menuItems={[
+          {
+            icon: 'arrow.up.arrow.down',
+            text: Drag ? 'Готово' : 'Змінити порядок',
+            action: () => {
+              setDrag(!Drag);
+            }
+          },
+          // { icon: 'plus', text: 'Додати', action: () => alert('Додати виджети') },
+          { icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },
+        ]} />
+        <GestureHandlerRootView >
 
+          <DraggableFlatList
+            style={{ paddingTop: 50 }}
+            data={items}
+            onDragEnd={({ data }) => setItems(data)}
+            keyExtractor={(item) => item.key}
+            renderItem={renderItem}
+            activationDistance={Drag ? 1 : 9999}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
 
-        <DraggableFlatList
-          style={{ paddingTop: 10 }}
-          data={items}
-          onDragEnd={({ data }) => setItems(data)}
-          keyExtractor={(item) => item.key}
-          renderItem={renderItem}
-          activationDistance={Drag ? 1 : 9999}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        />
-
-      </GestureHandlerRootView>
+        </GestureHandlerRootView>
+      </SafeAreaView>
     </>
   );
 }

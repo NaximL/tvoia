@@ -9,6 +9,7 @@ import useDragStore, { useDropStore } from '@/store/DragStore';
 import { Header } from '@/components/ui/Header';
 import { View } from 'react-native';
 import * as Haptics from 'expo-haptics';
+import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 
 type ContextMenuItem = {
   icon: SymbolViewProps['name'];
@@ -34,7 +35,7 @@ export default function TabLayout() {
 
     return (
       <View style={{ zIndex: 10000 }} >
-        <Header menuItems={item.menuItems}/>
+        <Header menuItems={item.menuItems} />
       </View>
     );
   };
@@ -63,29 +64,38 @@ export default function TabLayout() {
   ]
 
   return (
-    <Tabs
-      screenOptions={{
-        headerStyle: gstyles.back,
-        tabBarActiveTintColor: NavBarTint,
-        tabBarButton: HapticTab,
-      }}
+
+
+    <NativeTabs
+    // screenOptions={{
+    //   headerStyle: gstyles.back,
+    //   tabBarActiveTintColor: NavBarTint,
+    //   tabBarButton: HapticTab,
+    // }}
     >
 
 
       {Pages.map(screen =>
-        <Tabs.Screen
+        <NativeTabs.Trigger
           key={screen.name}
           name={screen.name}
           options={{
             title: screen.title,
-            headerRight: () => HeaderTop(screen),
-            // headerTitle: () =>
-            tabBarIcon: ({ color, focused }) =>
-              <IconSymbol size={28} name={focused ? screen.icon_focus : screen.icon} color={color} />,
-          }}
-        />
-      )}
 
-    </Tabs>
+            // headerRight: () => HeaderTop(screen),
+            // headerTitle: () =>
+            // tabBarIcon: ({ color, focused }) =>
+            // <IconSymbol size={28} name={focused ? screen.icon_focus : screen.icon} color={color} />,
+          }}
+        >
+          
+
+          <Icon sf={{ default: screen.icon, selected: screen.icon_focus }} />
+          <Label>{screen.title}</Label>
+        </NativeTabs.Trigger>
+      )}
+    </NativeTabs>
+
+
   );
 }

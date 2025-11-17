@@ -19,7 +19,7 @@ export default function RootLayout() {
       <Stack>
 
         <Stack.Screen name="(tabs)" options={{ title: 'Статистика', headerShown: false }} />
-
+ƒ
         <Stack.Screen
           name="SendMessage"
           options={{
