@@ -12,7 +12,7 @@ import { useGstyle } from '@/Colors';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
-import BackGraund from '@/components/Global/BackGraund';
+
 
 const Homework = () => {
   const { backgroundColor, isDark } = useGstyle();
@@ -210,7 +210,6 @@ const Homework = () => {
           </React.Fragment>
         ))}
       </ScrollView>
-      <BackGraund />
     </View>
   );
 };

@@ -6,7 +6,7 @@ import {
   Alert,
   Pressable,
 } from 'react-native';
-import { Header } from '@/components/ui/Header';
+
 import { Widget } from '@/components/Pages/Statistics/Widget';
 import { StatCard } from '@/components/Pages/Statistics/StatCard';
 import { ActivityList } from '@/components/Pages/Statistics/ActivityList';
@@ -24,12 +24,15 @@ import Animated, {
   withTiming,
   cancelAnimation,
 } from 'react-native-reanimated';
-import { SafeAreaView } from 'react-native-safe-area-context';
+
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import useDragStore from '@/store/DragStore';
-import { BlurView } from 'expo-blur';
-import BackGraund from '@/components/Global/BackGraund';
+import useDragStore, { useDropStore } from '@/store/DragStore';
+
+
+
+
+
 
 export default function Index() {
   const { backgroundColor } = useGstyle();
@@ -190,10 +193,12 @@ export default function Index() {
       </Animated.View>
     </ScaleDecorator>
   );
-
+  const [selectedIndex, setSelectedIndex] = useState(0);
   return (
     <>
       <GestureHandlerRootView style={{ flex: 1, backgroundColor }}>
+
+
         <DraggableFlatList
           style={{ paddingTop: 10 }}
           data={items}
@@ -207,7 +212,6 @@ export default function Index() {
         />
 
       </GestureHandlerRootView>
-      <BackGraund />
     </>
   );
 }

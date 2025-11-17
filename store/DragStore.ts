@@ -18,7 +18,7 @@ type TypeDropStore = {
 };
 
 export const useDropStore = create<TypeDropStore>((set) => ({
-  Drop: true,
+  Drop: false,
   setDrop: (state) => set({ Drop: state }),
 }));
 
