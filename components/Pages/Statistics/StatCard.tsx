@@ -1,19 +1,36 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useGstyle } from '@/Colors';
 
-export const StatCard = ({ color, icon, title, subtitle }: any) => (
-  <View style={[styles.card, { backgroundColor: color }]}>
-    <View style={styles.iconContainer}>
-      <Ionicons name={icon} size={26} color="white" />
+type Props = {
+  
+  icon: string;
+  title: string;
+  subtitle: string;
+}
+
+export const StatCard = ({ icon, title, subtitle }: Props) => {
+  const { isDark, textColor, widgetColor } = useGstyle();
+
+  const iconBg = isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.05)';
+  const textCol = isDark ? '#fff' : '#000';
+  const subtitleCol = isDark ? 'rgba(255,255,255,0.9)' : 'rgba(0,0,0,0.7)';
+
+  return (
+    <View style={[styles.card, { backgroundColor: widgetColor }]}>
+      <View style={[styles.iconContainer, { backgroundColor: iconBg }]}>
+        {/*@ts-ignore*/}
+        <Ionicons name={icon} size={26} color={textCol} />
+      </View>
+
+      <View style={styles.textBlock}>
+        <Text style={[styles.title, { color: textCol }]}>{title}</Text>
+        <Text style={[styles.subtitle, { color: subtitleCol }]}>{subtitle}</Text>
+      </View>
     </View>
-    
-    <View style={styles.textBlock}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
-    </View>
-  </View>
-);
+  );
+};
 
 const styles = StyleSheet.create({
   card: {
@@ -23,13 +40,13 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 12,
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+
     elevation: 10,
     transform: [{ scale: 1 }],
   },
   iconContainer: {
-    backgroundColor: 'rgba(255,255,255,0.15)',
     padding: 10,
     borderRadius: 14,
     alignSelf: 'flex-start',
@@ -40,13 +57,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 30,
     fontWeight: '800',
-    color: '#fff',
     letterSpacing: 0.5,
   },
   subtitle: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'rgba(255,255,255,0.9)',
     marginTop: 4,
   },
 });

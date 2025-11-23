@@ -2,11 +2,7 @@ import { useGstyle } from '@/Colors';
 import { IconSymbol } from '@/components/ui/icon/Ios';
 import { BlurView } from 'expo-blur';
 import React from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  View, Text
-} from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { Host, ContextMenu, Button } from '@expo/ui/swift-ui';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,80 +13,98 @@ type Props = {
 };
 
 export const Header = ({ menuItems, style }: Props) => {
-  const { accentColor, backgroundColor } = useGstyle();
+  const { isDark } = useGstyle();
   const { top } = useSafeAreaInsets();
+
   return (
-    <BlurView intensity={40} tint="dark" style={[styles.container, style,{top:top}]}>
-      <View style={styles.inner}>
-        {/* Title */}
-        <Text style={styles.title}>Статистика</Text>
 
-        {/* Menu */}
-        <Pressable
-          style={styles.menuButton}
-          onPress={() => {
-            Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-          }}
-        >
-          <Host>
-            <ContextMenu>
-              <ContextMenu.Items>
-                {menuItems.map((item, index) => (
-                  <Button
-                    key={index}
-                    systemImage={item.icon}
-                    onPress={item.action}
-                  >
-                    {item.text}
-                  </Button>
-                ))}
-              </ContextMenu.Items>
 
-              <ContextMenu.Trigger>
-                <IconSymbol name="ellipsis.circle" size={28} color={accentColor} />
-              </ContextMenu.Trigger>
-            </ContextMenu>
-          </Host>
-        </Pressable>
-      </View>
-    </BlurView>
+    <Pressable
+      style={[styles.menuButton, { top: top }, style]}
+      onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+    >
+      <Host style={{ borderRadius: 44, }}>
+        <ContextMenu>
+          <ContextMenu.Items>
+            {menuItems.map((item, index) => (
+              <Button key={index} systemImage={item.icon} onPress={item.action}>
+                {item.text}
+              </Button>
+            ))}
+          </ContextMenu.Items>
+
+          <ContextMenu.Trigger>
+
+            <BlurView tint={isDark ? "dark" : "light"} intensity={20} style={styles.buttonBackground}>
+              {/* <View > */}
+              <IconSymbol name="ellipsis" size={28} color={"white"} />
+
+              {/* </View> */}
+
+              <View
+                style={{
+                  position: 'absolute',
+                  top: 1,
+                  left: 1,
+                  width: '90%',
+                  height: '50%',
+                  borderTopWidth: 10,
+                  borderLeftWidth: 10,
+                  borderColor: isDark ? 'rgba(87, 87, 95, 0.5)' : 'rgba(184, 184, 184, 0.5)',
+                  borderTopLeftRadius: 40,
+                  zIndex: 2,
+
+                }}
+              />
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 1,
+                  right: 1,
+                  width: '90%',
+                  height: '50%',
+                  borderBottomWidth: 0.05,
+                  borderRightWidth: 0.05,
+                  borderColor: isDark ? 'rgba(87, 87, 95, 0.5)' : 'rgba(184, 184, 184, 0.5)',
+                  borderBottomRightRadius: 40,
+                  zIndex: 2
+                }}
+              />
+            </BlurView>
+
+          </ContextMenu.Trigger>
+        </ContextMenu>
+      </Host>
+    </Pressable>
+
+
+
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: "absolute",
-    zIndex: 1000,
-    
-    left: 0,
-    width: "100%",
-    paddingTop: 18,
-    paddingBottom: 5,
-    height: "auto",
-    // paddingHorizontal: 16,
-    justifyContent: 'flex-end',
-    // borderRadius: 20,
-    overflow: "hidden"
-  },
-  inner: {
-    flexDirection: 'row',
-    justifyContent: "center",
-    alignItems: 'center',
-  },
-  title: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 22,
-    fontWeight: '600',
-    color: "white",
 
-  },
   menuButton: {
     position: "absolute",
-    right: 10,
-    width: 40,
-    height: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
+    top: 50,
+    right: 16,
+    width: 44,
+    height: 44,
+    zIndex: 1000,
+    borderRadius: 44,
+
+    shadowColor: '#000000',
+    shadowOpacity: 0.5,
+    shadowRadius: 9,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  buttonBackground: {
+    backgroundColor: "rgba(12, 12, 12, 0.3)",
+    width: 44,
+    height: 44,
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 30,
+    overflow: "hidden"
   },
 });

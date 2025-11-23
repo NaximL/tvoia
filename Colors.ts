@@ -9,26 +9,27 @@ export const useGstyle = () => {
     setIsDark(colorScheme === 'dark');
   }, [colorScheme]);
 
-  const NavBarTint = isDark ? 'white' : "#579fe7ff";
 
-  const backgroundColor = isDark ? '#1a1a1f' : '#f7f7fa';
-  const widgetColor = isDark ? "#1C1C1E" : "#fff"
-  const accentColor = isDark ? '#579fe7ff' : '#007aff';
-
-
+  const backgroundColor = isDark ? '#000' : '#f7f7fa';
+  const widgetColor = isDark ? "#1C1C1E" : "#fff";
+  const accentColor = isDark ? '#007bffff' : '#007aff';
+  const textColor = isDark ? "#ffffff" : "#000000";
+  const NavBarTint = accentColor;
 
 
   const gstyles = StyleSheet.create({
     back: { backgroundColor },
     widgetColor: { backgroundColor: widgetColor },
-    color: { color: isDark ? '#ffffff' : '#000000' },
+    color: { color: textColor },
   });
 
   return {
     gstyles,
     isDark,
     backgroundColor,
+    widgetColor,
     accentColor,
-    NavBarTint
+    NavBarTint,
+    textColor
   };
 };

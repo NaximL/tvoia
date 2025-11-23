@@ -1,3 +1,4 @@
+import { useGstyle } from "@/Colors";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
 import { uk } from "date-fns/locale";
 import { useRouter } from "expo-router";
@@ -76,41 +77,38 @@ function groupByDate(data: any[]) {
 
 export default function Diary() {
   const [diary] = useState(dummyDiary);
-  const isDark = useColorScheme() === "dark";
-  const router = useRouter();
+  const { gstyles, isDark } = useGstyle();
 
   const sections = groupByDate(diary);
 
   const gradeColorLight: Record<string | number, string> = {
-    Н: "#FF3B30",
-    "Н/О": "#FF6F00",
-    "Н/А": "#999999",
-    0: "#d20000",
-    1: "#d20000",
-    2: "#d20000",
-    3: "#d21500",
-    4: "#d21500",
-    5: "#d23f00",
-    6: "#d2a500",
-    7: "#d2bd00",
-    8: "#a9c24d",
-    9: "#A0D755",
-    10: "#69C835",
-    11: "#69C835",
-    12: "#30C759",
+    Н: "#FF3B30", "Н/О": "#FF6F00", "Н/А": "#999999",
+    0: "#d20000", 1: "#d20000", 2: "#d20000",
+    3: "#d21500", 4: "#d21500", 5: "#d23f00",
+    6: "#d2a500", 7: "#d2bd00", 8: "#a9c24d",
+    9: "#A0D755", 10: "#69C835", 11: "#69C835", 12: "#30C759",
   };
 
-  const getGradeColor = (grade: number | string) => gradeColorLight[grade] || "#6C63FF";
+  const gradeColorDark: Record<string | number, string> = {
+    Н: "#FF5C5C", "Н/О": "#FFA500", "Н/А": "#AAAAAA",
+    0: "#FF3B30", 1: "#FF3B30", 2: "#FF3B30",
+    3: "#FF453A", 4: "#FF453A", 5: "#FF7000",
+    6: "#FFD60A", 7: "#FFD60A", 8: "#C3E88D",
+    9: "#B7E151", 10: "#7ED321", 11: "#7ED321", 12: "#32D74B",
+  };
+
+  const getGradeColor = (grade: number | string) =>
+    isDark ? gradeColorDark[grade] || "#6C63FF" : gradeColorLight[grade] || "#6C63FF";
 
   const renderItem = ({ item }: any) => {
     const gradeType = systemicGradeTypeMap[item.systemicGradeType] || "-";
     const color = getGradeColor(item.grade);
 
     return (
-      <Pressable style={styles.item} onPress={() => { }}>
+      <Pressable style={[styles.item, { backgroundColor: isDark ? "#1C1C1E" : "#fff" }]} onPress={() => { }}>
         <View style={{ flex: 1 }}>
-          <Text style={styles.subject}>{item.subjectMatter}</Text>
-          <Text style={styles.type}>{gradeType}</Text>
+          <Text style={[styles.subject, { color: isDark ? "#fff" : "#000" }]}>{item.subjectMatter}</Text>
+          <Text style={[styles.type, { color: isDark ? "#aaa" : "#555" }]}>{gradeType}</Text>
         </View>
         <View style={[styles.gradeBadge, { backgroundColor: color }]}>
           <Text style={styles.gradeText}>{item.grade}</Text>
@@ -121,13 +119,13 @@ export default function Diary() {
 
   const renderSectionHeader = ({ section: { title } }: any) => (
     <View style={styles.sectionHeader}>
-      <Text style={styles.sectionTitle}>{title}</Text>
-      <View style={styles.line} />
+      <Text style={[styles.sectionTitle, { color: isDark ? "#aaa" : "#888" }]}>{title}</Text>
+      <View style={[styles.line, { backgroundColor: isDark ? "#333" : "#ccc" }]} />
     </View>
   );
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? "#121212" : "#F5F5F7" }]}>
+    <View style={[styles.container, gstyles.back]}>
       <SectionList
         sections={sections}
         keyExtractor={(item) => item.id}
@@ -141,22 +139,22 @@ export default function Diary() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  backButtonText: { fontSize: 17, color: "#2D8FF2" },
   sectionHeader: { paddingVertical: 8 },
-  sectionTitle: { fontSize: 14.5, fontWeight: "600", color: "#888" },
-  line: { height: 1, backgroundColor: "#ccc", marginTop: 4 },
+  sectionTitle: { fontSize: 14.5, fontWeight: "600" },
+  line: { height: 1, marginTop: 4 },
   item: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "rgba(255,255,255,0.05)",
     padding: 14,
     borderRadius: 16,
     marginBottom: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
   },
-  date: { color: "#888", fontSize: 13 },
-  subject: { color: "white", fontSize: 16, fontWeight: "600", marginTop: 2 },
-  type: { color: "#aaa", fontSize: 13 },
+  subject: { fontSize: 16, fontWeight: "600", marginTop: 2 },
+  type: { fontSize: 13 },
   gradeBadge: {
     width: 42,
     height: 42,
@@ -167,5 +165,5 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 6,
   },
-  gradeText: { color: "white", fontWeight: "700", fontSize: 18 },
+  gradeText: { color: "#fff", fontWeight: "700", fontSize: 18 },
 });

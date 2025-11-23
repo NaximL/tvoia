@@ -9,7 +9,6 @@ import useDragStore, { useDropStore } from '@/store/DragStore';
 import { Header } from '@/components/ui/Header';
 import { View } from 'react-native';
 import * as Haptics from 'expo-haptics';
-import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
 
 type ContextMenuItem = {
   icon: SymbolViewProps['name'];
@@ -27,14 +26,45 @@ type Pages = {
 
 export default function TabLayout() {
 
-  const { gstyles, NavBarTint, accentColor } = useGstyle();
+  const { backgroundColor, NavBarTint, accentColor } = useGstyle();
   const { Drag, setDrag } = useDragStore();
+  const { Drop, setDrop } = useDropStore();
 
+
+  const animValue = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(animValue, {
+      toValue: Drop ? 0 : 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [Drop]);
+
+  const animatedStyle: any = {
+    fontSize: animValue.interpolate({ inputRange: [0, 1], outputRange: [18, 20] }),
+    color: animValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: [accentColor, '#fff']
+    }),
+    fontWeight: '600',
+
+  };
 
   const HeaderTop = (item: any) => {
 
     return (
       <View style={{ zIndex: 10000 }} >
+
+        <Pressable style={{ padding: 5 }} onPress={() => {
+          setDrop(!Drop);
+          Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+        }}>
+          <Animated.Text style={animatedStyle}>
+            {item.title}
+          </Animated.Text>
+        </Pressable>
+
         <Header menuItems={item.menuItems} />
       </View>
     );
@@ -52,6 +82,7 @@ export default function TabLayout() {
           text: Drag ? 'Готово' : 'Змінити порядок',
           action: () => {
             setDrag(!Drag);
+            setDrop(!Drop);
           }
         },
         // { icon: 'plus', text: 'Додати', action: () => alert('Додати виджети') },
@@ -64,38 +95,30 @@ export default function TabLayout() {
   ]
 
   return (
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: NavBarTint,
+        tabBarButton: HapticTab,
+        headerShown: false,
 
-
-    <NativeTabs
-    // screenOptions={{
-    //   headerStyle: gstyles.back,
-    //   tabBarActiveTintColor: NavBarTint,
-    //   tabBarButton: HapticTab,
-    // }}
+      }}
     >
 
 
       {Pages.map(screen =>
-        <NativeTabs.Trigger
+        <Tabs.Screen
           key={screen.name}
           name={screen.name}
           options={{
+
             title: screen.title,
-
-            // headerRight: () => HeaderTop(screen),
-            // headerTitle: () =>
-            // tabBarIcon: ({ color, focused }) =>
-            // <IconSymbol size={28} name={focused ? screen.icon_focus : screen.icon} color={color} />,
+            headerTitle: () => HeaderTop(screen),
+            tabBarIcon: ({ color, focused }) =>
+              <IconSymbol size={28} name={focused ? screen.icon_focus : screen.icon} color={color} />,
           }}
-        >
-          
-
-          <Icon sf={{ default: screen.icon, selected: screen.icon_focus }} />
-          <Label>{screen.title}</Label>
-        </NativeTabs.Trigger>
+        />
       )}
-    </NativeTabs>
 
-
+    </Tabs>
   );
 }

@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  RefreshControl,
-  Alert,
-  Pressable,
-} from 'react-native';
-
+import { View, StyleSheet, RefreshControl, Alert, Pressable } from 'react-native';
 import { Widget } from '@/components/Pages/Statistics/Widget';
 import { StatCard } from '@/components/Pages/Statistics/StatCard';
 import { ActivityList } from '@/components/Pages/Statistics/ActivityList';
@@ -24,58 +17,43 @@ import Animated, {
   withTiming,
   cancelAnimation,
 } from 'react-native-reanimated';
-
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
-import useDragStore, { useDropStore } from '@/store/DragStore';
+import useDragStore from '@/store/DragStore';
 import { Header } from '@/components/ui/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-
-
-
-
+type WidgetItem = { key: string; type: 'widget'; One?: string; Two?: string; Textc: string; Value: string; Icon: string };
+type StatsGroupItem = { key: string; type: 'statsGroup'; stats: { color?: string; icon: string; title: string; subtitle: string }[] };
+type ActivityItem = { key: string; type: 'activity' };
+type Item = WidgetItem | StatsGroupItem | ActivityItem;
 
 export default function Index() {
-  const { backgroundColor } = useGstyle();
+  const { gstyles, isDark, widgetColor } = useGstyle();
   const [refreshing, setRefreshing] = useState(false);
-
-  const { Drag, setDrag } = useDragStore()
-
+  const { Drag, setDrag } = useDragStore();
   const router = useRouter();
+
   const rotation = useSharedValue(0);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
-
-
-
-
 
   useEffect(() => {
     if (Drag) {
       const delay = Math.random() * 300;
       setTimeout(() => {
         rotation.value = withRepeat(
-          withSequence(
-            withTiming(-1.3, { duration: 120 }),
-            withTiming(1.3, { duration: 140 })
-          ),
+          withSequence(withTiming(-1.3, { duration: 120 }), withTiming(1.3, { duration: 140 })),
           -1,
           true
         );
         translateX.value = withRepeat(
-          withSequence(
-            withTiming(-0.8, { duration: 220 }),
-            withTiming(0.8, { duration: 250 })
-          ),
+          withSequence(withTiming(-0.8, { duration: 220 }), withTiming(0.8, { duration: 250 })),
           -1,
           true
         );
         translateY.value = withRepeat(
-          withSequence(
-            withTiming(-0.8, { duration: 200 }),
-            withTiming(0.8, { duration: 240 })
-          ),
+          withSequence(withTiming(-0.8, { duration: 200 }), withTiming(0.8, { duration: 240 })),
           -1,
           true
         );
@@ -98,42 +76,16 @@ export default function Index() {
     ],
   }));
 
-  const [items, setItems] = useState([
+  const defaultGradient = isDark ? ['#1C1C1E', '#2a2a2e'] : ['#fff', '#f0f0f5'];
+
+  const [items, setItems] = useState<Item[]>([
+    { key: '1', type: 'widget', One: defaultGradient[0], Two: defaultGradient[1], Textc: 'Середній бал', Value: '12.00', Icon: 'school-outline' },
+    { key: '2', type: 'widget', One: defaultGradient[0], Two: defaultGradient[1], Textc: 'Повідомлення', Value: '0', Icon: 'mail-outline' },
     {
-      key: '1',
-      type: 'widget',
-      One: '#7D5FFF',
-      Two: '#5C4DFF',
-      Textc: 'Середній бал',
-      Value: '12.00',
-      Icon: 'school-outline',
-    },
-    {
-      key: '2',
-      type: 'widget',
-      One: '#FF8A5B',
-      Two: '#FF5C93',
-      Textc: 'Повідомлення',
-      Value: '0',
-      Icon: 'mail-outline',
-    },
-    {
-      key: '3',
-      type: 'statsGroup',
-      stats: [
-        {
-          color: '#00C4B4',
-          icon: 'book-outline',
-          title: '47',
-          subtitle: 'Завдань на завтра',
-        },
-        {
-          color: '#FFB84C',
-          icon: 'trophy-outline',
-          title: '1 з 32',
-          subtitle: 'Місце в класі',
-        },
-      ],
+      key: '3', type: 'statsGroup', stats: [
+        { color: widgetColor, icon: 'book-outline', title: '47', subtitle: 'Завдань на завтра' },
+        { color: widgetColor, icon: 'trophy-outline', title: '1 з 32', subtitle: 'Місце в класі' },
+      ]
     },
     { key: '4', type: 'activity' },
   ]);
@@ -152,42 +104,16 @@ export default function Index() {
         entering={ZoomIn.springify()}
         exiting={ZoomOut.springify()}
         layout={Layout.springify()}
-        style={[
-          styles.wrapper,
-          wiggleStyle,
-          { opacity: isActive ? 0.8 : 1 },
-        ]}
+        style={[styles.wrapper, wiggleStyle, { opacity: isActive ? 0.8 : 1 }]}
       >
         <Pressable
           disabled={!Drag}
-          onLongPress={() => {
-            if (Drag) {
-              Haptics.selectionAsync();
-
-              drag();
-            }
-          }}
+          onLongPress={() => Drag && Haptics.selectionAsync().then(() => drag())}
         >
-          {item.type === 'widget' && (
-            <Widget
-              One={item.One}
-              Two={item.Two}
-              Textc={item.Textc}
-              Value={item.Value}
-              Icon={item.Icon}
-            />
-          )}
+          {item.type === 'widget' && <Widget {...item} />}
           {item.type === 'statsGroup' && (
             <View style={styles.statsRow}>
-              {item.stats.map((s: any, i: any) => (
-                <StatCard
-                  key={i}
-                  color={s.color}
-                  icon={s.icon}
-                  title={s.title}
-                  subtitle={s.subtitle}
-                />
-              ))}
+              {item.stats.map((s:any, i:any) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
             </View>
           )}
           {item.type === 'activity' && <ActivityList router={router} />}
@@ -197,46 +123,31 @@ export default function Index() {
   );
 
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor, }}>
-        <Header menuItems={[
-          {
-            icon: 'arrow.up.arrow.down',
-            text: Drag ? 'Готово' : 'Змінити порядок',
-            action: () => {
-              setDrag(!Drag);
-            }
-          },
-          // { icon: 'plus', text: 'Додати', action: () => alert('Додати виджети') },
-          { icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },
-        ]} />
-        <GestureHandlerRootView >
-
+    <SafeAreaView style={{ flex: 1, ...gstyles.back }}>
+      <GestureHandlerRootView >
+        <Header
+          menuItems={[
+            { icon: 'arrow.up.arrow.down', text: Drag ? 'Готово' : 'Змінити порядок', action: () => setDrag(!Drag) },
+            { icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },
+          ]}
+        />
+        <View style={{ flex: 1, marginTop: 16 }}>
           <DraggableFlatList
-            style={{ paddingTop: 50 }}
             data={items}
             onDragEnd={({ data }) => setItems(data)}
             keyExtractor={(item) => item.key}
             renderItem={renderItem}
             activationDistance={Drag ? 1 : 9999}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+            contentContainerStyle={{ paddingBottom: 24 }}
           />
-
-        </GestureHandlerRootView>
-      </SafeAreaView>
-    </>
+        </View>
+      </GestureHandlerRootView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    marginVertical: 6,
-  },
-  statsRow: {
-    flexDirection: 'row',
-    marginHorizontal: 16,
-    gap: 12,
-  },
+  wrapper: { marginVertical: 6 },
+  statsRow: { flexDirection: 'row', marginHorizontal: 16, gap: 12 },
 });

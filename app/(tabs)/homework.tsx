@@ -12,6 +12,7 @@ import { useGstyle } from '@/Colors';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 const Homework = () => {
@@ -178,7 +179,7 @@ const Homework = () => {
               entering={ZoomIn.springify()}
               exiting={ZoomOut.springify()}
               layout={Layout.springify()}
-              style={[styles.cardWrap, { marginBottom: index === data.length - 1 ? 4 : 14 }]} // остання карточка менш відступ
+              style={[styles.cardWrap, { marginBottom: index === data.length - 1 ? 4 : 14 }]}
             >
               <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}>
                 <BlurView intensity={isDark ? 25 : 70} tint={isDark ? 'dark' : 'light'} style={[styles.card, { borderColor: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.05)' }]}>
@@ -197,7 +198,7 @@ const Homework = () => {
   };
 
   return (
-    <View style={{ backgroundColor }}>
+    <SafeAreaView style={{ backgroundColor }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
@@ -210,19 +211,30 @@ const Homework = () => {
           </React.Fragment>
         ))}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 };
 
 export default Homework;
 
 const styles = StyleSheet.create({
-  cardWrap: { marginBottom: 14 },
-  card: { borderRadius: 24, padding: 18, overflow: 'hidden', borderWidth: 1, shadowOpacity: 0.15, shadowOffset: { width: 0, height: 4 }, shadowRadius: 12 },
+  cardWrap: {
+    marginBottom: 14,
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 24
+  },
+  card: {
+    borderRadius: 24,
+    padding: 18,
+    overflow: 'hidden',
+    // borderWidth: 1,
+
+  },
   headerBubble: { alignSelf: 'flex-start', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 16, marginBottom: 10 },
   lessonTitle: { fontSize: 16, fontWeight: '600', color: '#fff' },
   taskText: { fontSize: 15, lineHeight: 21, fontWeight: '400' },
-  sectionHeaderWrap: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 6, paddingHorizontal: 4 },
+  sectionHeaderWrap: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom:20, paddingHorizontal: 4 },
   sectionTitle: { fontSize: 17, fontWeight: '700' },
   sectionDate: { fontSize: 13, fontWeight: '500' },
   separator: { height: 1, backgroundColor: 'rgba(150,150,150,0.2)', marginVertical: 12 },
