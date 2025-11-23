@@ -87,8 +87,16 @@ export default function MessagesScreen() {
                                     color={isDark ? "#5c5c5c" : "#c1c1c1"}
                                 />
                             </Pressable> */}
+
                         </View>
                     </View>
+                    <View style={{
+                        left: 0,
+                        right: 0,
+                        marginLeft: 16,
+                        height: 1,
+                        backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)"
+                    }}></View>
                 </View>
                 {messages.map((msg) => (
                     <Animated.View
@@ -155,6 +163,7 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 8,
         borderRadius: 12,
+
     },
 
     searchInner: {
