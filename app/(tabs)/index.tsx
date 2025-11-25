@@ -110,10 +110,18 @@ export default function Index() {
           disabled={!Drag}
           onLongPress={() => Drag && Haptics.selectionAsync().then(() => drag())}
         >
-          {item.type === 'widget' && <Widget {...item} />}
+          {item.type === 'widget' && (
+            <Widget
+              One={item.One}
+              Two={item.Two}
+              Textc={item.Textc}
+              Value={item.Value}
+              Icon={item.Icon}
+            />
+          )}
           {item.type === 'statsGroup' && (
             <View style={styles.statsRow}>
-              {item.stats.map((s:any, i:any) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
+              {item.stats.map((s: any, i: any) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
             </View>
           )}
           {item.type === 'activity' && <ActivityList router={router} />}

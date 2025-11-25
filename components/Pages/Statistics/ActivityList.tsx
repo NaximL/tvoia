@@ -54,7 +54,7 @@ export const ActivityList = ({ router }: { router: Router }) => {
 
   return (
     <View style={[styles.container, gstyles.widgetColor]}>
-      <Pressable style={{ flexDirection: "row" }} onPress={() => router.push("/diary")}>
+      <Pressable style={{ flexDirection: "row" }} onPress={() => router.push("/Modals/diary")}>
         <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>Оцінки</Text>
         <Ionicons name="chevron-forward" size={26} color={isDark ? '#fff' : '#000'} />
       </Pressable>

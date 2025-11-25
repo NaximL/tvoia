@@ -1,6 +1,7 @@
 import { useGstyle } from "@/Colors";
 import { format, isToday, isYesterday, parseISO } from "date-fns";
 import { uk } from "date-fns/locale";
+import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
@@ -77,7 +78,7 @@ function groupByDate(data: any[]) {
 
 export default function Diary() {
   const [diary] = useState(dummyDiary);
-  const { gstyles, isDark } = useGstyle();
+  const { gstyles, isDark, BackgroundColorModal } = useGstyle();
 
   const sections = groupByDate(diary);
 
@@ -105,7 +106,7 @@ export default function Diary() {
     const color = getGradeColor(item.grade);
 
     return (
-      <Pressable style={[styles.item, { backgroundColor: isDark ? "#1C1C1E" : "#fff" }]} onPress={() => { }}>
+      <Pressable style={[styles.item, { backgroundColor: isDark ? "rgba(255,255,255,0.05)" : "#fff" }]} onPress={() => { }}>
         <View style={{ flex: 1 }}>
           <Text style={[styles.subject, { color: isDark ? "#fff" : "#000" }]}>{item.subjectMatter}</Text>
           <Text style={[styles.type, { color: isDark ? "#aaa" : "#555" }]}>{gradeType}</Text>
@@ -118,27 +119,28 @@ export default function Diary() {
   };
 
   const renderSectionHeader = ({ section: { title } }: any) => (
-    <View style={styles.sectionHeader}>
+    <BlurView tint="default"  style={styles.sectionHeader}>
       <Text style={[styles.sectionTitle, { color: isDark ? "#aaa" : "#888" }]}>{title}</Text>
       <View style={[styles.line, { backgroundColor: isDark ? "#333" : "#ccc" }]} />
-    </View>
+    </BlurView>
   );
 
   return (
-    <View style={[styles.container, gstyles.back]}>
+    
       <SectionList
         sections={sections}
+        style={[styles.container, { backgroundColor: BackgroundColorModal }]}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
         contentContainerStyle={{ paddingBottom: 100, paddingHorizontal: 16 }}
       />
-    </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: {  },
   sectionHeader: { paddingVertical: 8 },
   sectionTitle: { fontSize: 14.5, fontWeight: "600" },
   line: { height: 1, marginTop: 4 },

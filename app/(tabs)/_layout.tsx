@@ -90,7 +90,7 @@ export default function TabLayout() {
       ]
     },
     { name: "homework", title: "Завдання", icon: "doc.text", icon_focus: "doc.text.fill", menuItems: [{ icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },] },
-    { name: "messages", title: "Листи", icon: "envelope", icon_focus: "envelope.fill", menuItems: [{ icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },] },
+    { name: "messages/Messages", title: "Листи", icon: "envelope", icon_focus: "envelope.fill", menuItems: [{ icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },] },
     { name: "schedule", title: "Розклад", icon: "calendar", icon_focus: "calendar", menuItems: [{ icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },] },
   ]
 
@@ -100,7 +100,6 @@ export default function TabLayout() {
         tabBarActiveTintColor: NavBarTint,
         tabBarButton: HapticTab,
         headerShown: false,
-
       }}
     >
 

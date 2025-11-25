@@ -20,7 +20,7 @@ export const Header = ({ menuItems, style }: Props) => {
 
 
     <Pressable
-      style={[styles.menuButton, { top: top }, style]}
+      style={[styles.menuButton, { top: top - 20 }, style]}
       onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
     >
       <Host style={{ borderRadius: 44, }}>
@@ -46,12 +46,12 @@ export const Header = ({ menuItems, style }: Props) => {
                   position: 'absolute',
                   top: 1,
                   left: 1,
-                  width: '90%',
+                  width: '50%',
                   height: '50%',
-                  borderTopWidth: 10,
-                  borderLeftWidth: 10,
+                  borderTopWidth: 0.3,
+                  borderLeftWidth: 0.3,
                   borderColor: isDark ? 'rgba(87, 87, 95, 0.5)' : 'rgba(184, 184, 184, 0.5)',
-                  borderTopLeftRadius: 40,
+                  borderTopLeftRadius: 50,
                   zIndex: 2,
 
                 }}
@@ -61,12 +61,12 @@ export const Header = ({ menuItems, style }: Props) => {
                   position: 'absolute',
                   bottom: 1,
                   right: 1,
-                  width: '90%',
+                  width: '50%',
                   height: '50%',
-                  borderBottomWidth: 0.05,
-                  borderRightWidth: 0.05,
+                  borderBottomWidth: 0.3,
+                  borderRightWidth: 0.3,
                   borderColor: isDark ? 'rgba(87, 87, 95, 0.5)' : 'rgba(184, 184, 184, 0.5)',
-                  borderBottomRightRadius: 40,
+                  borderBottomRightRadius: 50,
                   zIndex: 2
                 }}
               />

@@ -9,11 +9,17 @@ export const useGstyle = () => {
     setIsDark(colorScheme === 'dark');
   }, [colorScheme]);
 
-
+  //#161617ff
+  //#1a1a1c
   const backgroundColor = isDark ? '#000' : '#f7f7fa';
+  const homeworkwidgetColor = isDark ? "#121213ff" : "#fff";
   const widgetColor = isDark ? "#1C1C1E" : "#fff";
-  const accentColor = isDark ? '#007bffff' : '#007aff';
+  const accentColor = isDark ? '#3290ee' : '#007aff';
   const textColor = isDark ? "#ffffff" : "#000000";
+  const BackgroundColorModal = isDark ? "#1c1c1e" : "#f2f2f7";
+
+  const SearchBarColor = isDark ? "#2c2c2eff" : "#e5e5ea";
+
   const NavBarTint = accentColor;
 
 
@@ -27,9 +33,12 @@ export const useGstyle = () => {
     gstyles,
     isDark,
     backgroundColor,
+    homeworkwidgetColor,
     widgetColor,
     accentColor,
     NavBarTint,
+    BackgroundColorModal,
+    SearchBarColor,
     textColor
   };
 };
