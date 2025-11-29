@@ -121,7 +121,7 @@ export default function Index() {
           )}
           {item.type === 'statsGroup' && (
             <View style={styles.statsRow}>
-              {item.stats.map((s: any, i: any) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
+              {item.stats.map((s: any, i: number) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
             </View>
           )}
           {item.type === 'activity' && <ActivityList router={router} />}

@@ -5,12 +5,12 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { Layout, ZoomIn, ZoomOut } from 'react-native-reanimated';
-
+import { GlassView } from 'expo-glass-effect';
 import { TextInput } from 'react-native';
 import { useGstyle } from '@/Colors';
-import Button from '@/components/ui/buttons/button';
+
 import { IconSymbol } from '@/components/ui/icon/Ios';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import ContextMenu from '@/components/ui/ContextMenu';
 
 
@@ -37,7 +37,7 @@ export default function MessagesScreen() {
     const [refreshing, setRefreshing] = useState(false);
     const router = useRouter();
     const [Vhid, setVhid] = useState(0);
-
+    const { bottom } = useSafeAreaInsets();
     const onRefresh = () => {
         setRefreshing(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -62,7 +62,16 @@ export default function MessagesScreen() {
         <SafeAreaView style={{ backgroundColor, flex: 1 }}>
 
 
-            <BlurView tint={isDark ? 'dark' : 'light'} intensity={30} style={[styles.BottomTab, { borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)', backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(179, 179, 179, 0.165)', }]}>
+            <GlassView
+                style={
+                    [styles.BottomTab,
+                    {
+                        bottom: bottom + 55,
+                        // borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)',
+                        // backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(255, 255, 255, 0.5)',
+
+                    }]}
+            >
                 <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
                     <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
                         <IconSymbol name="line.3.horizontal.decrease.circle" size={28} color={accentColor} />
@@ -75,7 +84,7 @@ export default function MessagesScreen() {
                 <Pressable onPress={() => router.push('/Modals/SendMessage')}>
                     <IconSymbol name="square.and.pencil" size={28} color={accentColor} />
                 </Pressable>
-            </BlurView>
+            </GlassView>
 
 
 
@@ -267,19 +276,19 @@ const styles = StyleSheet.create({
 
     BottomTab: {
         position: 'absolute',
-        bottom: 10,
+
         left: 0,
         right: 0,
-        marginHorizontal: 16,
-        borderRadius: 20,
+        marginHorizontal: 22,
+        borderRadius: 50,
         height: 50,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,
         justifyContent: 'space-between',
         zIndex: 1000,
-        borderWidth: 0.5,
-        overflow: 'hidden',
+        // borderWidth: 0.5,
+        // overflow: 'hidden',
     },
     BottomTabTextContainer: {
         flexDirection: 'column',

@@ -36,10 +36,10 @@ export const Header = ({ menuItems, style }: Props) => {
           <ContextMenu.Trigger>
 
             <BlurView tint={isDark ? "dark" : "light"} intensity={20} style={styles.buttonBackground}>
-              {/* <View > */}
+              
               <IconSymbol name="ellipsis" size={28} color={"white"} />
 
-              {/* </View> */}
+              
 
               <View
                 style={{
