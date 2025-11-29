@@ -12,6 +12,7 @@ import { useGstyle } from '@/Colors';
 import { IconSymbol } from '@/components/ui/icon/Ios';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import ContextMenu from '@/components/ui/ContextMenu';
+import BottomMenu from '@/components/ui/BottomMenu';
 
 
 const messages = [
@@ -33,11 +34,12 @@ const messages = [
 const gradientsNoRead = ['#3290ee', '#2985e1'];
 
 export default function MessagesScreen() {
-    const { backgroundColor, isDark, accentColor, SearchBarColor, textColor } = useGstyle();
+    const { backgroundColor, isDark, SearchBarColor, textColor } = useGstyle();
+    const { bottom } = useSafeAreaInsets();
+
     const [refreshing, setRefreshing] = useState(false);
     const router = useRouter();
     const [Vhid, setVhid] = useState(0);
-    const { bottom } = useSafeAreaInsets();
     const onRefresh = () => {
         setRefreshing(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
@@ -61,8 +63,8 @@ export default function MessagesScreen() {
     return (
         <SafeAreaView style={{ backgroundColor, flex: 1 }}>
 
-
-            <GlassView
+            <BottomMenu menuItems={menuItems} />
+            {/* <GlassView
                 style={
                     [styles.BottomTab,
                     {
@@ -84,7 +86,7 @@ export default function MessagesScreen() {
                 <Pressable onPress={() => router.push('/Modals/SendMessage')}>
                     <IconSymbol name="square.and.pencil" size={28} color={accentColor} />
                 </Pressable>
-            </GlassView>
+            </GlassView> */}
 
 
 

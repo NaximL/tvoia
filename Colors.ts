@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, useColorScheme } from "react-native";
+import { Platform, StyleSheet, useColorScheme } from "react-native";
 
 export const useGstyle = () => {
   const colorScheme = useColorScheme();
   const [isDark, setIsDark] = useState(colorScheme === 'dark');
-
+  const iosVersion: number = Platform.OS === 'ios' ? parseFloat(Platform.Version as string) : 0;
   useEffect(() => {
     setIsDark(colorScheme === 'dark');
   }, [colorScheme]);
@@ -22,6 +22,7 @@ export const useGstyle = () => {
 
   const NavBarTint = accentColor;
 
+  const LiquidGlass = Platform.OS === 'ios' && iosVersion < 26.0;
 
   const gstyles = StyleSheet.create({
     back: { backgroundColor },
@@ -39,6 +40,8 @@ export const useGstyle = () => {
     NavBarTint,
     BackgroundColorModal,
     SearchBarColor,
-    textColor
+    textColor,
+    LiquidGlass
+
   };
 };
