@@ -1,22 +1,38 @@
 import { useGstyle } from "@/Colors";
 import { BlurView } from "expo-blur";
-import { GlassView, isLiquidGlassAvailable } from "expo-glass-effect";
+import { GlassView } from "expo-glass-effect";
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ContextMenu from "./ContextMenu";
 import { IconSymbol } from "./icon/Ios";
 import * as Haptics from 'expo-haptics';
-import { useRouter } from "expo-router";
+
+
+type Objects = {
+    first: {
+        icon: any;
+    },
+    central: {
+        top: string;
+        bottom: string;
+    }
+    end: {
+        icon: any;
+        action: () => void;
+    }
+}
 type Props = {
     menuItems: any;
+    BottomButton: Objects;
 };
 
-const BottomMenu = ({ menuItems, }: Props) => {
+
+
+const BottomMenu = ({ menuItems, BottomButton }: Props) => {
     const { isDark, accentColor, textColor, LiquidGlass } = useGstyle();
     const { bottom } = useSafeAreaInsets();
-    const router = useRouter();
 
-    return isLiquidGlassAvailable() ? < GlassView
+    return LiquidGlass ? < GlassView
         style={
             [styles.BottomTab,
             {
@@ -26,20 +42,21 @@ const BottomMenu = ({ menuItems, }: Props) => {
     >
         <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
             <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
-                <IconSymbol name="line.3.horizontal.decrease.circle" size={28} color={accentColor} />
+                <IconSymbol name={BottomButton.first.icon} size={28} color={accentColor} />
             </ContextMenu>
         </Pressable >
         <View style={styles.BottomTabTextContainer}>
-            <Text style={[styles.BottomTabText, { color: textColor }]}>Оновлено щойно</Text>
-            <Text style={styles.BottomTabTextSmall}>10 непрочитаних</Text>
+            <Text style={[styles.BottomTabText, { color: textColor }]}>{BottomButton.central.top}</Text>
+            <Text style={styles.BottomTabTextSmall}>{BottomButton.central.bottom}</Text>
         </View>
-        <Pressable onPress={() => router.push('/Modals/SendMessage')}>
-            <IconSymbol name="square.and.pencil" size={28} color={accentColor} />
+        <Pressable onPress={BottomButton.end.action}>
+            <IconSymbol name={BottomButton.end.icon} size={28} color={accentColor} />
         </Pressable>
     </GlassView >
         :
         <BlurView
-            tint={isDark ? "dark" : "light"}
+            tint="default"
+            intensity={20}
             style={
                 [styles.BottomTab,
                 {
@@ -48,21 +65,20 @@ const BottomMenu = ({ menuItems, }: Props) => {
                     overflow: "hidden",
                     borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)',
                     backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(255, 255, 255, 0.5)',
-
                 }]
             }
         >
-            < Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
+            <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
                 <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
-                    <IconSymbol name="line.3.horizontal.decrease.circle" size={28} color={accentColor} />
+                    <IconSymbol name={BottomButton.first.icon} size={28} color={accentColor} />
                 </ContextMenu>
             </Pressable >
             <View style={styles.BottomTabTextContainer}>
-                <Text style={[styles.BottomTabText, { color: textColor }]}>Оновлено щойно</Text>
-                <Text style={styles.BottomTabTextSmall}>10 непрочитаних</Text>
+                <Text style={[styles.BottomTabText, { color: textColor }]}>{BottomButton.central.top}</Text>
+                <Text style={styles.BottomTabTextSmall}>{BottomButton.central.bottom}</Text>
             </View>
-            <Pressable onPress={() => router.push('/Modals/SendMessage')}>
-                <IconSymbol name="square.and.pencil" size={28} color={accentColor} />
+            <Pressable onPress={BottomButton.end.action}>
+                <IconSymbol name={BottomButton.end.icon} size={28} color={accentColor} />
             </Pressable>
         </BlurView >
 

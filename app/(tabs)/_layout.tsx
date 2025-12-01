@@ -42,43 +42,65 @@ export default function TabLayout() {
 
   return (
     LiquidGlass ?
+
+      <NativeTabs
+        tintColor={NavBarTint}
+        disableTransparentOnScrollEdge={true}
+
+      >
+
+
+        {
+          Pages.map(screen =>
+            <NativeTabs.Trigger
+              key={screen.name}
+              name={screen.name}
+            >
+              <Label>{screen.title}</Label>
+              <Icon sf={{ default: screen.icon, selected: screen.icon_focus }} />
+            </NativeTabs.Trigger>
+          )
+        }
+
+      </NativeTabs >
+
+      :
       <View style={{ flex: 1 }}>
         <Tabs
           screenOptions={{
             headerShown: false,
             tabBarStyle: {
-
               position: 'absolute',
               left: 0,
               right: 0,
               bottom: 32,
               marginHorizontal: 20,
-              paddingHorizontal: 10,
-              height: 68,
+              height: 66,
               borderRadius: 50,
-              overflow: 'hidden',
-
-              borderWidth: 0.5,
-              borderColor: "rgba(215, 215, 215, 0.1)",
-
+              paddingHorizontal: 14,
               shadowColor: '#000',
-              shadowOffset: { width: 0, height: 4 },
-              shadowOpacity: 0.1,
-              shadowRadius: 10,
+              shadowOffset: { width: 0, height: 10 },
+              shadowOpacity: 0.20,
+              shadowRadius: 25,
+              elevation: 20,
+              backgroundColor: isDark ? 'rgba(69, 69, 69, 0.18)' : "rgba(255, 255, 255, 0.5)",
+              borderWidth: 0.5,
+              borderColor: "rgba(255, 255, 255, 0.131)",
 
-              backgroundColor: isDark ? 'rgba(69, 69, 69, 0.18)' : "rgba(255, 255, 255, 0.5)"
-
+              zIndex: 0,
             },
             tabBarBackground: () => (
-
-              // < View style={StyleSheet.absoluteFill} >
-              <BlurView
-                tint={"default"}
-                intensity={20}
-                style={StyleSheet.absoluteFill}
-              />
-              // </View>
-
+              <View style={{
+                flex: 1,
+                borderRadius: 50,
+                overflow: 'hidden',
+              }}>
+                <BlurView
+                  tint="default"
+                  intensity={20}
+                  style={{ flex: 1 }}
+                />
+              </View>
             ),
           }}
         >
@@ -131,12 +153,12 @@ export default function TabLayout() {
             style={{
               position: 'absolute',
               bottom: 36,
-              width: tabWidth * 1.1,
-              height: 60,
+              width: tabWidth * 1.2,
+              height: 58,
               borderRadius: 50,
               backgroundColor: isDark
                 ? 'rgba(255,255,255,0.08)'
-                : 'rgba(137,137,137,0.1)',
+                : 'rgba(87, 87, 87, 0.1)',
               borderWidth: 0,
               borderColor: isDark
                 ? 'rgba(255,255,255,0.05)'
@@ -158,26 +180,5 @@ export default function TabLayout() {
           />
         )}
       </View >
-      :
-      < NativeTabs
-        tintColor={NavBarTint}
-        disableTransparentOnScrollEdge={true}
-
-      >
-
-
-        {
-          Pages.map(screen =>
-            <NativeTabs.Trigger
-              key={screen.name}
-              name={screen.name}
-            >
-              <Label>{screen.title}</Label>
-              <Icon sf={{ default: screen.icon, selected: screen.icon_focus }} />
-            </NativeTabs.Trigger>
-          )
-        }
-
-      </NativeTabs >
   );
 }

@@ -1,4 +1,5 @@
 import { useGstyle } from '@/Colors';
+import BottomMenu from '@/components/ui/BottomMenu';
 import ContextMenu from '@/components/ui/ContextMenu';
 import { IconSymbol } from '@/components/ui/icon/Ios';
 import { BlurView } from 'expo-blur';
@@ -45,7 +46,6 @@ export default function Homework() {
     { icon: 'clock', text: 'Невиконані', action: () => setFilter('unfinished') },
   ];
 
-  // 🎨 Градієнти предметів
   const subjectGradients: Record<string, { One: string; Two: string }> = {
     'Математика': { One: '#2196F3', Two: '#64B5F6' },
     'Алгебра': { One: '#2196F3', Two: '#64B5F6' },
@@ -88,7 +88,7 @@ export default function Homework() {
       date: new Date('2025-11-25T00:00:00+02:00'),
     },
 
-    // === НА ЗАВТРА (2025-11-26) ===
+
     {
       id: 20000201,
       subject: 'Хімія',
@@ -102,7 +102,7 @@ export default function Homework() {
       date: new Date('2025-11-26T00:00:00+02:00'),
     },
 
-    // === НА ВЧОРА (2025-11-24) ===
+
     {
       id: 20000301,
       subject: 'Українська література',
@@ -115,8 +115,6 @@ export default function Homework() {
       task: '№ 12.4, 12.5, 12.6 (домашня контрольна)',
       date: new Date('2025-11-24T00:00:00+02:00'),
     },
-
-    // === ТВОЇ ЗАПИСАНІ ЗА 2025-11-13 ===
     {
       id: 18778206,
       subject: 'Геометрія',
@@ -235,6 +233,32 @@ export default function Homework() {
     );
   };
 
+
+
+
+
+
+
+
+  const BottomButton = {
+    first: {
+      icon: "line.3.horizontal.decrease.circle"
+    },
+    central: {
+      top: "Фільтр:",
+      bottom: filter === 'all' ? 'Всі' : filter === 'today' ? 'Сьогодні' : 'Невиконані'
+    },
+    end: {
+      icon: "magnifyingglass",
+      action: () => {
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); setSearchs(true); setTimeout(() => {
+          searchInputRef.current?.focus();
+        }, 100);
+      }
+    }
+  }
+
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor }}>
       {Searchs && (
@@ -243,7 +267,7 @@ export default function Homework() {
             <View style={styles.searchInner}>
               <IconSymbol name="magnifyingglass" size={18} color={isDark ? '#9d9d9d' : '#6c6c6c'} />
               <TextInput
-                ref={searchInputRef} // 🔹 фокус на input
+                ref={searchInputRef}
                 value={search}
                 onChangeText={setSearch}
                 placeholder="Пошук"
@@ -259,7 +283,9 @@ export default function Homework() {
         {sortedDates.map(d => renderSection(d))}
       </ScrollView>
 
-      <BlurView tint={isDark ? 'dark' : 'light'} intensity={30} style={[styles.BottomTab, { borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)', backgroundColor: isDark ? 'rgba(60,60,60,0.14)' : 'rgba(179,179,179,0.08)' }]}>
+
+      <BottomMenu menuItems={menuItems} BottomButton={BottomButton} />
+      {/* <BlurView tint='default' intensity={30} style={[styles.BottomTab, { borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)', backgroundColor: isDark ? 'rgba(60,60,60,0.14)' : 'rgba(179,179,179,0.08)' }]}>
         <Pressable onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); }}>
           <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
             <IconSymbol name="line.3.horizontal.decrease.circle" size={28} color={accentColor} />
@@ -268,7 +294,7 @@ export default function Homework() {
 
         <View style={styles.BottomTabTextContainer}>
           <Text style={[styles.BottomTabText, { color: textColor }]}>Фільтр:</Text>
-          <Text style={styles.BottomTabTextSmall}>{filter === 'all' ? 'Всі' : filter === 'today' ? 'Сьогодні' : 'Невиконані'}</Text>
+          <Text style={styles.BottomTabTextSmall}></Text>
         </View>
 
         <Pressable onPress={() => {
@@ -276,14 +302,16 @@ export default function Homework() {
             searchInputRef.current?.focus();
           }, 100);
         }}>
-          <IconSymbol name="magnifyingglass" size={28} color={accentColor} />
+          <IconSymbol name={} size={28} color={accentColor} />
         </Pressable>
-      </BlurView>
+      </BlurView> */}
+
+
     </SafeAreaView>
   );
 }
 
-// стилі залишаються твої
+
 const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 32,
@@ -363,7 +391,7 @@ const styles = StyleSheet.create({
 
   BottomTab: {
     position: 'absolute',
-    bottom: 10,
+
     left: 0,
     right: 0,
     marginHorizontal: 16,

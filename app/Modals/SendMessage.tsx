@@ -13,7 +13,6 @@ import {
   TouchableOpacity,
   View
 } from 'react-native';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import { SymbolViewProps } from 'expo-symbols';
 import ContextMenu from '@/components/ui/ContextMenu';
 
@@ -71,48 +70,64 @@ export default function SendMessage() {
         <View style={styles.grabber} />
       </View>
 
-
       <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
         <Text style={styles.cancelText}>Скасувати</Text>
       </TouchableOpacity>
 
-
-
-
       <KeyboardAvoidingView
-        style={{ flex: 1 }}
+        style={[{ flex: 1 }, styles.container]}
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
-        <Animated.View entering={FadeInDown.delay(120)} style={styles.container}>
+        {/* <View style={ }> */}
+        <View style={styles.topBar}>
+          <Text style={[styles.title, gstyles.color]}>{theme}</Text>
 
-          <View style={styles.topBar}>
-            <Text style={[styles.title, gstyles.color]}>{theme}</Text>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              { backgroundColor: IsReady ? accentColor : 'rgba(100,100,100,0.7)' }
+            ]}
+            onPress={sendMail}
+            disabled={!IsReady}
+          >
+            <IconSymbol
+              name="arrow.up"
+              size={22}
+              color={BackgroundColorModal}
+              weight="bold"
+            />
+          </TouchableOpacity>
+        </View>
 
-            <TouchableOpacity
-              style={[
-                styles.sendButton,
-                { backgroundColor: IsReady ? accentColor : 'rgba(100,100,100,0.7)' }
-              ]}
-              onPress={sendMail}
-              disabled={!IsReady}
-            >
-              <IconSymbol
-                name="arrow.up"
-                size={22}
-                color={BackgroundColorModal}
-                weight="bold"
-              />
-            </TouchableOpacity>
+        <Text style={styles.label}>Кому:</Text>
+
+        <ContextMenu onPress={(item) => {
+          setReceiverType(item.text);
+          setReceiver(null);
+          setIsReady(false);
+        }} Menu={receiverTypeMenu}>
+          <View
+            style={[
+              styles.inputRow,
+              {
+                backgroundColor: isDark
+                  ? 'rgba(255,255,255,0.07)'
+                  : 'rgba(0,0,0,0.05)'
+              }
+            ]}
+          >
+            <Text style={[styles.inputText, gstyles.color]}>
+              {receiverType ?? 'Кому відправити?'}
+            </Text>
+            <IconSymbol name="chevron.down" size={18} color="#888" />
           </View>
+        </ContextMenu>
 
-
-          <Text style={styles.label}>Кому:</Text>
-
-          <ContextMenu onPress={(item) => {
-            setReceiverType(item.text);
-            setReceiver(null);
-            setIsReady(false);
-          }} Menu={receiverTypeMenu}>
+        {receiverType && (
+          <ContextMenu style={{ marginTop: 10 }} onPress={(item) => {
+            setReceiver(item.text);
+            setIsReady(true);
+          }} Menu={selectedList}>
             <View
               style={[
                 styles.inputRow,
@@ -124,65 +139,43 @@ export default function SendMessage() {
               ]}
             >
               <Text style={[styles.inputText, gstyles.color]}>
-                {receiverType ?? 'Кому відправити?'}
+                {receiver ?? 'Оберіть отримувача'}
               </Text>
               <IconSymbol name="chevron.down" size={18} color="#888" />
             </View>
           </ContextMenu>
-
-          {receiverType && (
-            <ContextMenu style={{ marginTop: 10 }} onPress={(item) => {
-              setReceiver(item.text);
-              setIsReady(true);
-            }} Menu={selectedList}>
-              <View
-                style={[
-                  styles.inputRow,
-                  {
-                    backgroundColor: isDark
-                      ? 'rgba(255,255,255,0.07)'
-                      : 'rgba(0,0,0,0.05)'
-                  }
-                ]}
-              >
-                <Text style={[styles.inputText, gstyles.color]}>
-                  {receiver ?? 'Оберіть отримувача'}
-                </Text>
-                <IconSymbol name="chevron.down" size={18} color="#888" />
-              </View>
-            </ContextMenu>
-          )}
+        )}
 
 
-          <View
-            style={[
-              styles.subjectWrapper,
-              { borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)', marginTop: 10 }
-            ]}
-          >
-            <Text style={styles.label}>Тема:</Text>
-            <TextInput
-              value={subject}
-              onChangeText={text => setSubject(text)}
-              placeholderTextColor="#8e8e93"
-              style={[styles.input, gstyles.color]}
-            />
-          </View>
-
-
+        <View
+          style={[
+            styles.subjectWrapper,
+            { borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)', marginTop: 10 }
+          ]}
+        >
+          <Text style={styles.label}>Тема:</Text>
           <TextInput
-            value={message}
-            onChangeText={setMessage}
-            multiline
+            value={subject}
+            onChangeText={text => setSubject(text)}
             placeholderTextColor="#8e8e93"
-            style={[
-              styles.textarea, gstyles.color,
-              {
-                borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'
-              }
-            ]}
+            style={[styles.input, gstyles.color]}
           />
-        </Animated.View>
+        </View>
+
+
+        <TextInput
+          value={message}
+          onChangeText={setMessage}
+          multiline
+          placeholderTextColor="#8e8e93"
+          style={[
+            styles.textarea, gstyles.color,
+            {
+              borderColor: isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'
+            }
+          ]}
+        />
+
       </KeyboardAvoidingView>
     </View>
   );
@@ -211,11 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: '400'
   },
   container: {
-    borderRadius: 24,
     padding: 20,
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
     marginTop: 38
   },
   topBar: {
@@ -224,7 +213,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 16,
     paddingRight: 4,
-    flexShrink: 0,
   },
   title: {
     fontSize: 34,
@@ -236,13 +224,9 @@ const styles = StyleSheet.create({
   sendButton: {
     width: 38,
     height: 38,
-    maxWidth: 38,
-    maxHeight: 38,
     borderRadius: 22,
     alignItems: 'center',
     justifyContent: 'center',
-    flexShrink: 0,
-    flexGrow: 0,
     overflow: 'hidden',
   },
   label: {

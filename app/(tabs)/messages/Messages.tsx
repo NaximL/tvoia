@@ -58,12 +58,25 @@ export default function MessagesScreen() {
         { icon: 'paperplane', iconSelected: 'checkmark', text: 'Вихідні', action: () => alert('Показати відправлені') },
     ];
 
+    const BottomButton = {
+        first: {
+            icon: "line.3.horizontal.decrease.circle"
+        },
+        central: {
+            top: "Оновлено щойно",
+            bottom: "10 непрочитаних"
+        },
+        end: {
+            icon: "square.and.pencil",
+            action: () => router.push('/Modals/SendMessage')
+        }
+    }
 
 
     return (
         <SafeAreaView style={{ backgroundColor, flex: 1 }}>
 
-            <BottomMenu menuItems={menuItems} />
+            <BottomMenu menuItems={menuItems} BottomButton={BottomButton} />
             {/* <GlassView
                 style={
                     [styles.BottomTab,
