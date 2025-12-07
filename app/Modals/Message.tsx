@@ -24,50 +24,45 @@ const message = {
 };
 
 export default function FullMessageVisual() {
-    const { isDark, accentColor, BackgroundColorModal,gstyles } = useGstyle();
+    const { isDark, accentColor, BackgroundColorModal, gstyles } = useGstyle();
     const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
     useEffect(() => {
         navigation.setOptions({
-            title: message.topic,
-            headerLeft: () => (
-                <TouchableOpacity
-                    style={styles.headerBackContainer}
-                    onPress={() => navigation.goBack()}
-                    activeOpacity={0.7}
-                >
-                    <IconSymbol name="chevron.left" size={22} color={accentColor} />
-                    {!message.isRead && (
-                        <View style={styles.unreadDots}>
-                            <Text style={styles.unreadText}>11</Text>
-                        </View>
-                    )}
-                </TouchableOpacity>
-            ),
+            headerTitle: message.topic,
+            headerBackTitleVisible: false,
+            headerBackTitle: "Назад",
+            // headerRight: () =>
+            //     !message.isRead ? (
+            //         <View style={styles.navBadgeWrap}>
+            //             <View style={styles.navBadge}>
+            //                 <Text style={styles.navBadgeText}>11</Text>
+            //             </View>
+            //         </View>
+            //     ) : null,
         });
-    }, [navigation]);
-
+    }, [message.isRead]);
     return (
         <ScrollView contentContainerStyle={[styles.container, { backgroundColor: BackgroundColorModal }]}>
-            
+
             <View style={styles.header}>
                 <Text style={[styles.topicText, gstyles.color]}>{message.topic}</Text>
                 <Text style={[styles.dateText, { color: isDark ? '#AAA' : '#666' }]}>{message.date}</Text>
             </View>
 
-            
+
             <View style={styles.section}>
                 <Text style={[styles.label, { color: accentColor }]}>Від:</Text>
                 <Text style={[styles.value, gstyles.color]}>{message.sender}</Text>
             </View>
 
-            
+
             <View style={styles.section}>
                 <Text style={[styles.label, { color: accentColor }]}>Предмет:</Text>
                 <Text style={[styles.value, gstyles.color]}>{message.pred}</Text>
             </View>
-            
+
             <View style={styles.section}>
                 <Text style={[styles.label, { color: accentColor }]}>Повідомлення:</Text>
                 <View style={styles.bodyContainer}>
@@ -124,5 +119,29 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 12,
         fontWeight: '600',
+    },
+    navBadgeWrap: {
+        marginRight: 12,
+        marginTop: 2,
+    },
+
+    navBadge: {
+        backgroundColor: '#ff3b30',
+        minWidth: 18,
+        height: 18,
+        paddingHorizontal: 6,
+        borderRadius: 9,
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOpacity: 0.25,
+        shadowRadius: 3,
+        shadowOffset: { width: 0, height: 2 },
+    },
+
+    navBadgeText: {
+        color: '#fff',
+        fontSize: 11,
+        fontWeight: '700',
     },
 });
