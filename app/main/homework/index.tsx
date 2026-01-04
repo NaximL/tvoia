@@ -1,7 +1,9 @@
 import { useGstyle } from '@/Colors';
-import BottomMenu from '@/components/ui/BottomMenu';
-import ContextMenu from '@/components/ui/ContextMenu';
-import { IconSymbol } from '@/components/ui/icon/Ios';
+import BottomMenu from '@/common/ui/BottomMenu';
+// import BottomMenu from '@/components/ui/BottomMenu';
+import ContextMenu from '@/common/ui/ContextMenu';
+import { IconSymbol } from '@/common/ui/Icon';
+
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -74,7 +76,7 @@ export default function Homework() {
     return isDark ? { One: '#444', Two: '#666' } : { One: '#ddd', Two: '#eee' };
   };
   const lessons = [
-    // === НА СЬОГОДНІ (2025-11-25) ===
+
     {
       id: 20000101,
       subject: 'Фізика',
@@ -209,7 +211,7 @@ export default function Homework() {
           return (
             <Animated.View key={lesson.id} entering={ZoomIn.springify()} exiting={ZoomOut.springify()} layout={Layout.springify()}>
               <Pressable onPress={() => {
-                router.push({ pathname: '/Modals/homeworkmodal', params: { subject: lesson.subject, task: lesson.task, files: lesson.files } });
+                router.push({ pathname: '/modal/homework', params: { subject: lesson.subject, task: lesson.task, files: lesson.files } });
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               }}>
                 <BlurView intensity={isDark ? 20 : 45} tint={isDark ? 'dark' : 'light'} style={[styles.card, { backgroundColor: homeworkwidgetColor, borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)' }]}>

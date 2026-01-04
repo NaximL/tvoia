@@ -1,4 +1,3 @@
-// ActivityList.tsx
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -54,7 +53,7 @@ export const ActivityList = ({ router }: { router: Router }) => {
 
   return (
     <View style={[styles.container, gstyles.widgetColor]}>
-      <Pressable style={{ flexDirection: "row" }} onPress={() => router.push("/Modals/diary")}>
+      <Pressable style={{ flexDirection: "row" }} onPress={() => router.push('/modal/diary')}>
         <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>Оцінки</Text>
         <Ionicons name="chevron-forward" size={26} color={isDark ? '#fff' : '#000'} />
       </Pressable>

@@ -20,7 +20,7 @@ export const StatCard = ({ icon, title, subtitle }: Props) => {
   return (
     <View style={[styles.card, { backgroundColor: widgetColor }]}>
       <View style={[styles.iconContainer, { backgroundColor: iconBg }]}>
-        {/*@ts-ignore*/}
+        {/* @ts-ignore */}
         <Ionicons name={icon} size={26} color={textCol} />
       </View>
 

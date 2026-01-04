@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, RefreshControl, Alert, Pressable } from 'react-native';
-import { Widget } from '@/components/Pages/Statistics/Widget';
-import { StatCard } from '@/components/Pages/Statistics/StatCard';
-import { ActivityList } from '@/components/Pages/Statistics/ActivityList';
+import { Widget } from './components/Widget';
+import { StatCard } from './components/StatCard';
+import { ActivityList } from './components/ActivityList';
 import { useGstyle } from '@/Colors';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -20,7 +20,6 @@ import Animated, {
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import useDragStore from '@/store/DragStore';
-import { Header } from '@/components/ui/Header';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 type WidgetItem = { key: string; type: 'widget'; One?: string; Two?: string; Textc: string; Value: string; Icon: string };
@@ -133,12 +132,6 @@ export default function Index() {
   return (
     <SafeAreaView style={{ flex: 1, ...gstyles.back }}>
       <GestureHandlerRootView >
-        <Header
-          menuItems={[
-            { icon: 'arrow.up.arrow.down', text: Drag ? 'Готово' : 'Змінити порядок', action: () => setDrag(!Drag) },
-            { icon: 'gear', text: 'Налаштування', action: () => alert('Налаштування виджетів') },
-          ]}
-        />
         <View style={{ flex: 1, marginTop: 16 }}>
           <DraggableFlatList
             data={items}

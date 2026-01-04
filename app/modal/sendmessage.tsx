@@ -1,5 +1,4 @@
 import { useGstyle } from '@/Colors';
-import { IconSymbol } from '@/components/ui/icon/Ios';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
@@ -14,7 +13,10 @@ import {
   View
 } from 'react-native';
 import { SymbolViewProps } from 'expo-symbols';
-import ContextMenu from '@/components/ui/ContextMenu';
+import { IconSymbol } from '@/common/ui/Icon';
+import GlassView from '@/common/ui/GlassView';
+import ContextMenu from '@/common/ui/ContextMenu';
+// import ContextMenu from '@/components/ui/ContextMenu';
 
 export default function SendMessage() {
   const { gstyles, BackgroundColorModal, isDark, accentColor } = useGstyle();
@@ -70,9 +72,44 @@ export default function SendMessage() {
         <View style={styles.grabber} />
       </View>
 
-      <TouchableOpacity style={styles.cancelBtn} onPress={() => router.back()}>
-        <Text style={styles.cancelText}>Скасувати</Text>
-      </TouchableOpacity>
+      <View style={{
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        paddingTop: 10,
+        paddingHorizontal: 20
+      }}>
+        <GlassView isInteractive={true} style={{
+          backgroundColor: "rgba(100,100,100,0.7)",
+          borderRadius: 44,
+          width: 43,
+          height: 43,
+          justifyContent: "center"
+        }}>
+          <TouchableOpacity style={{ alignItems: "center" }} onPress={() => router.back()}>
+            <IconSymbol name="xmark" size={24} color="#fff" />
+          </TouchableOpacity>
+        </GlassView>
+
+        <GlassView
+          tint={IsReady ? accentColor : 'rgba(100,100,100,0.7)'}
+          isInteractive={true} style={{
+            borderRadius: 44,
+            width: 43,
+            height: 43,
+            justifyContent: "center"
+          }}>
+          <TouchableOpacity style={{ alignItems: "center" }} onPress={() => router.back()}>
+            <IconSymbol
+              name="arrow.up"
+              size={28}
+              color={IsReady ? "#e8e8e8ff" : "#71717181"}
+              weight="medium"
+            />
+          </TouchableOpacity>
+        </GlassView>
+      </View>
+
+
 
       <KeyboardAvoidingView
         style={[{ flex: 1 }, styles.container]}
@@ -82,21 +119,7 @@ export default function SendMessage() {
         <View style={styles.topBar}>
           <Text style={[styles.title, gstyles.color]}>{theme}</Text>
 
-          <TouchableOpacity
-            style={[
-              styles.sendButton,
-              { backgroundColor: IsReady ? accentColor : 'rgba(100,100,100,0.7)' }
-            ]}
-            onPress={sendMail}
-            disabled={!IsReady}
-          >
-            <IconSymbol
-              name="arrow.up"
-              size={22}
-              color={BackgroundColorModal}
-              weight="bold"
-            />
-          </TouchableOpacity>
+
         </View>
 
         <Text style={styles.label}>Кому:</Text>
@@ -177,7 +200,7 @@ export default function SendMessage() {
         />
 
       </KeyboardAvoidingView>
-    </View>
+    </View >
   );
 }
 
@@ -205,7 +228,6 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 20,
-    marginTop: 38
   },
   topBar: {
     flexDirection: 'row',

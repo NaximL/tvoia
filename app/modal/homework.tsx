@@ -3,9 +3,10 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions, Linking } from 'react-native';
 import { useGstyle } from '@/Colors';
 import { useRouter, useLocalSearchParams } from 'expo-router';
-import { IconSymbol } from '@/components/ui/icon/Ios';
+
 import { BlurView } from 'expo-blur';
 import RenderHTML from 'react-native-render-html';
+import { IconSymbol } from '@/common/ui/Icon';
 
 interface HomeworkScreenParams {
     subject: string;

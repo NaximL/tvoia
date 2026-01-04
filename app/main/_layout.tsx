@@ -1,17 +1,17 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Pressable, Animated, Text, Platform, StyleSheet, View } from 'react-native';
 import { Tabs } from 'expo-router';
-import { IconSymbol } from '@/components/ui/icon/Ios';
 import { useGstyle } from '@/Colors';
 import { BlurView } from 'expo-blur';
 import * as Haptics from 'expo-haptics';
 import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
+import { IconSymbol } from '@/common/ui/Icon';
 
 const Pages: any[] = [
-  { name: 'index', title: 'Статистика', icon: 'house', icon_focus: 'house.fill' },
-  { name: 'homework', title: 'Завдання', icon: 'doc.text', icon_focus: 'doc.text.fill' },
-  { name: 'messages/Messages', title: 'Листи', icon: 'envelope', icon_focus: 'envelope.fill' },
-  { name: 'schedule', title: 'Розклад', icon: 'calendar', icon_focus: 'calendar' },
+  { name: 'home/index', title: 'Статистика', icon: 'house', icon_focus: 'house.fill' },
+  { name: 'homework/index', title: 'Завдання', icon: 'doc.text', icon_focus: 'doc.text.fill' },
+  { name: 'message/index', title: 'Листи', icon: 'envelope', icon_focus: 'envelope.fill' },
+  { name: 'schedule/index', title: 'Розклад', icon: 'calendar', icon_focus: 'calendar' },
 ];
 
 export default function TabLayout() {
@@ -42,19 +42,15 @@ export default function TabLayout() {
 
   return (
     LiquidGlass ?
-
       <NativeTabs
         tintColor={NavBarTint}
         disableTransparentOnScrollEdge={true}
-
       >
-
-
         {
           Pages.map(screen =>
             <NativeTabs.Trigger
               key={screen.name}
-              name={screen.name}
+              name={screen.name}          
             >
               <Label>{screen.title}</Label>
               <Icon sf={{ default: screen.icon, selected: screen.icon_focus }} />

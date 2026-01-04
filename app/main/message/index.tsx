@@ -5,14 +5,20 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { Pressable, RefreshControl, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Animated, { Layout, ZoomIn, ZoomOut } from 'react-native-reanimated';
-import { GlassView } from 'expo-glass-effect';
 import { TextInput } from 'react-native';
 import { useGstyle } from '@/Colors';
+import {
+    border,
+    buttonStyle,
+    padding,
+} from '@expo/ui/swift-ui/modifiers';
 
-import { IconSymbol } from '@/components/ui/icon/Ios';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import ContextMenu from '@/components/ui/ContextMenu';
-import BottomMenu from '@/components/ui/BottomMenu';
+import ContextMenu from '@/common/ui/ContextMenu';
+import BottomMenu from '@/common/ui/BottomMenu';
+import { IconSymbol } from '@/common/ui/Icon';
+import GlassView from '@/common/ui/GlassView';
+import { Button, Host, Image } from '@expo/ui/swift-ui';
 
 
 const messages = [
@@ -68,7 +74,7 @@ export default function MessagesScreen() {
         },
         end: {
             icon: "square.and.pencil",
-            action: () => router.push('/Modals/SendMessage')
+            action: () => { }
         }
     }
 
@@ -76,31 +82,50 @@ export default function MessagesScreen() {
     return (
         <SafeAreaView style={{ backgroundColor, flex: 1 }}>
 
-            <BottomMenu menuItems={menuItems} BottomButton={BottomButton} />
-            {/* <GlassView
+            {/* <BottomMenu menuItems={menuItems} BottomButton={BottomButton} /> */}
+
+            <View
                 style={
                     [styles.BottomTab,
                     {
-                        bottom: bottom + 55,
-                        // borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)',
-                        // backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(255, 255, 255, 0.5)',
-
+                        bottom: bottom + 60,
                     }]}
             >
-                <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
-                    <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
-                        <IconSymbol name="line.3.horizontal.decrease.circle" size={28} color={accentColor} />
+                <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
+                    <ContextMenu Menu={menuItems} onPress={() => console.log(123)}>
+                        <IconSymbol weight="medium" name="line.3.horizontal.decrease" size={29} color={textColor} />
                     </ContextMenu>
-                </Pressable>
-                <View style={styles.BottomTabTextContainer}>
-                    <Text style={[styles.BottomTabText, { color: textColor }]}>Оновлено щойно</Text>
-                    <Text style={styles.BottomTabTextSmall}>10 непрочитаних</Text>
-                </View>
-                <Pressable onPress={() => router.push('/Modals/SendMessage')}>
-                    <IconSymbol name="square.and.pencil" size={28} color={accentColor} />
-                </Pressable>
-            </GlassView> */}
+                </GlassView>
 
+                <GlassView
+                    isInteractive={true}
+                    style={{
+                        padding: 16,
+                        borderRadius: 44,
+                        flexDirection: 'row',
+                        width: 225,
+                    }}>
+                    <IconSymbol weight="medium" name="magnifyingglass" size={20} color={textColor} />
+                    <TextInput
+                        placeholder='Пошук'
+                        placeholderTextColor={isDark ? "#ccc" : "#555"}
+                        style={{
+
+                            marginLeft: 8,
+                            fontSize: 18,
+                            fontWeight:600,
+                            color: textColor,
+                        }}
+                    />
+                </GlassView>
+
+                <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
+                    <Pressable onPress={()=>router.push('/modal/sendmessage')}>
+                        <IconSymbol weight="medium" name="square.and.pencil" size={29} color={textColor} />
+                    </Pressable>
+                </GlassView>
+
+            </View>
 
 
             <ScrollView
@@ -123,20 +148,7 @@ export default function MessagesScreen() {
                 </View>
 
                 <View style={[styles.searchBar, { backgroundColor: SearchBarColor }]}>
-                    <View style={styles.searchInner}>
-                        <IconSymbol
-                            name="magnifyingglass"
-                            size={18}
-                            color={isDark ? "#9d9d9d" : "#6c6c6c"}
-                        />
 
-                        <TextInput
-                            style={[styles.searchInput, { color: isDark ? "#fff" : "#000" }]}
-                            placeholder="Пошук"
-                            placeholderTextColor={isDark ? "#8e8e93" : "#8e8e93"}
-                            onChangeText={(text) => console.log(text)}
-                        />
-                    </View>
                 </View>
                 <View style={{
                     left: 0,
@@ -155,7 +167,7 @@ export default function MessagesScreen() {
                             layout={Layout.springify()}
                         >
                             <Pressable
-                                onPress={() => { Haptics.selectionAsync(); router.push("/Modals/Message") }}
+                                onPress={() => { Haptics.selectionAsync(); router.push("/modal/message") }}
                                 style={({ pressed }) => ([, { opacity: pressed ? 0.85 : 1 }])}
                             >
 
@@ -221,7 +233,7 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         marginTop: 12,
         marginBottom: 8,
-        borderRadius: 12,
+        borderRadius: 20,
 
     },
 
@@ -299,7 +311,6 @@ const styles = StyleSheet.create({
         height: 50,
         flexDirection: 'row',
         alignItems: 'center',
-        paddingHorizontal: 20,
         justifyContent: 'space-between',
         zIndex: 1000,
         // borderWidth: 0.5,

@@ -24,38 +24,37 @@ const MAPPING: Record<string, ComponentProps<typeof MaterialIcons>['name']> = {
   'square.and.pencil': 'edit',
   'paperplane.fill': 'send',
 
-  // Documents / Homework
+  
   'doc.text': 'description',
   'doc.text.fill': 'description',
 
-  // Calendar / Schedule
+  
   'calendar': 'calendar-today',
   'calendar.fill': 'calendar-today',
   'ellipsis': 'more-horiz',
-  // Settings
+  
   'gear': 'settings',
 
-  // School / Stats
+  
   'graduationcap': 'school',
   'graduationcap.fill': 'school',
 
-  // Misc / Code
+  
   'chevron.left.forwardslash.chevron.right': 'code',
   'chevron.right': 'chevron-right',
-
-  // Trophy / Achievements
+  
   'trophy': 'emoji-events',
   'trophy.fill': 'emoji-events',
 
-  // Book
+  
   'book': 'menu-book',
   'book.fill': 'menu-book',
 
-  // User / Profile
+  
   'person': 'person',
   'person.fill': 'person',
 
-  // Help fallback
+  
   'questionmark': 'help-outline',
 };
 export function IconSymbol({ name, size = 24, color, style, weight = 'regular' }: IconSymbolProps) {

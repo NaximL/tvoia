@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions } from 'react-native';
 import { useGstyle } from '@/Colors';
 import { useNavigation } from 'expo-router';
-import { IconSymbol } from '@/components/ui/icon/Ios';
 import RenderHTML from 'react-native-render-html';
 
 const message = {

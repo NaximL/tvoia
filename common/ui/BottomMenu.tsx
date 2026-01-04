@@ -1,11 +1,11 @@
 import { useGstyle } from "@/Colors";
 import { BlurView } from "expo-blur";
-import { GlassView } from "expo-glass-effect";
 import { Pressable, Text, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import ContextMenu from "./ContextMenu";
-import { IconSymbol } from "./icon/Ios";
+import { IconSymbol } from "./Icon";
 import * as Haptics from 'expo-haptics';
+import GlassView from "./GlassView";
 
 
 type Objects = {
@@ -32,57 +32,30 @@ const BottomMenu = ({ menuItems, BottomButton }: Props) => {
     const { isDark, accentColor, textColor, LiquidGlass } = useGstyle();
     const { bottom } = useSafeAreaInsets();
 
-    return LiquidGlass ? < GlassView
+    return <GlassView
+        isInteractive={true}
         style={
             [styles.BottomTab,
             {
-                bottom: bottom + 55,
+                bottom: bottom + 60,
             }]
         }
     >
         <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
             <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
-                <IconSymbol name={BottomButton.first.icon} size={28} color={accentColor} />
+                <IconSymbol name={BottomButton.first.icon} size={28} color="#fff" />
             </ContextMenu>
         </Pressable >
+
         <View style={styles.BottomTabTextContainer}>
             <Text style={[styles.BottomTabText, { color: textColor }]}>{BottomButton.central.top}</Text>
             <Text style={styles.BottomTabTextSmall}>{BottomButton.central.bottom}</Text>
         </View>
+
         <Pressable onPress={BottomButton.end.action}>
-            <IconSymbol name={BottomButton.end.icon} size={28} color={accentColor} />
+            <IconSymbol name={BottomButton.end.icon} size={28} color="#fff" />
         </Pressable>
     </GlassView >
-        :
-        <BlurView
-            tint="default"
-            intensity={20}
-            style={
-                [styles.BottomTab,
-                {
-                    bottom: bottom + 70,
-                    borderWidth: 0.5,
-                    overflow: "hidden",
-                    borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)',
-                    backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(255, 255, 255, 0.5)',
-                }]
-            }
-        >
-            <Pressable onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}>
-                <ContextMenu Menu={menuItems} onPress={(item) => item.action()}>
-                    <IconSymbol name={BottomButton.first.icon} size={28} color={accentColor} />
-                </ContextMenu>
-            </Pressable >
-            <View style={styles.BottomTabTextContainer}>
-                <Text style={[styles.BottomTabText, { color: textColor }]}>{BottomButton.central.top}</Text>
-                <Text style={styles.BottomTabTextSmall}>{BottomButton.central.bottom}</Text>
-            </View>
-            <Pressable onPress={BottomButton.end.action}>
-                <IconSymbol name={BottomButton.end.icon} size={28} color={accentColor} />
-            </Pressable>
-        </BlurView >
-
-
 }
 
 export default BottomMenu;
