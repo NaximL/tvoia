@@ -159,7 +159,7 @@ const Schedule = () => {
 
                 <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
                     <Pressable onPress={() => switchWeek('prev')}>
-                        <IconSymbol weight="bold" name="chevron.left" size={29} color={textColor} />
+                        <IconSymbol weight="medium" name="chevron.left" size={29} color={textColor} />
                     </Pressable>
                 </GlassView>
 
@@ -185,7 +185,7 @@ const Schedule = () => {
                 {/* Наступний тиждень */}
                 <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
                     <Pressable onPress={() => switchWeek('next')}>
-                        <IconSymbol weight="bold" name="chevron.right" size={29} color={textColor} />
+                        <IconSymbol weight="medium" name="chevron.right" size={29} color={textColor} />
                     </Pressable>
                 </GlassView>
             </View>

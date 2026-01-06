@@ -1,11 +1,19 @@
+import { useGstyle } from '@/Colors';
 import { Stack } from 'expo-router';
 
 export default function ModalLayout() {
+  const { BackgroundColorModal, textColor } = useGstyle();
   return (
     <Stack
       screenOptions={{
         presentation: 'modal',
-        headerShown: false,
+        headerShown: true,
+        headerStyle: {
+          backgroundColor: BackgroundColorModal,
+        },
+        headerTitleStyle: {
+          color: textColor
+        }
       }}
     />
   );

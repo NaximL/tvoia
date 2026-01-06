@@ -8,14 +8,16 @@ type Props = {
     children: React.ReactNode;
     isInteractive?: boolean;
     tint?: string;
+    glassEffectStyle?: "regular" | "clear"
 }
 
-const GlassView = ({ style, children, isInteractive, tint }: Props) => {
+const GlassView = ({ style, children, isInteractive, tint, glassEffectStyle }: Props) => {
     const { LiquidGlass, isDark } = useGstyle();
     return (
         <>
             {LiquidGlass ?
                 <Gl
+                    glassEffectStyle={glassEffectStyle}
                     tintColor={tint}
                     isInteractive={isInteractive}
                     style={style}

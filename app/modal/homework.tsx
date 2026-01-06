@@ -2,7 +2,7 @@
 import React, { useEffect } from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View, useWindowDimensions, Linking } from 'react-native';
 import { useGstyle } from '@/Colors';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter, useLocalSearchParams, useNavigation } from 'expo-router';
 
 import { BlurView } from 'expo-blur';
 import RenderHTML from 'react-native-render-html';
@@ -20,6 +20,10 @@ export default function HomeworkScreen() {
     const router = useRouter();
     const params = useLocalSearchParams<HomeworkScreenParams>();
     const { subject, task, files } = params;
+    const navigation = useNavigation();
+    navigation.setOptions({
+        headerTitle: subject,
+    });
 
     useEffect(() => {
         router.setOptions?.({

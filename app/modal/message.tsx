@@ -32,16 +32,8 @@ export default function FullMessageVisual() {
             headerTitle: message.topic,
             headerBackTitleVisible: false,
             headerBackTitle: "Назад",
-            // headerRight: () =>
-            //     !message.isRead ? (
-            //         <View style={styles.navBadgeWrap}>
-            //             <View style={styles.navBadge}>
-            //                 <Text style={styles.navBadgeText}>11</Text>
-            //             </View>
-            //         </View>
-            //     ) : null,
         });
-    }, [message.isRead]);
+    }, []);
     return (
         <ScrollView contentContainerStyle={[styles.container, { backgroundColor: BackgroundColorModal }]}>
 

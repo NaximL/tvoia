@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, StyleSheet, RefreshControl, Alert, Pressable } from 'react-native';
-import { Widget } from './components/Widget';
-import { StatCard } from './components/StatCard';
-import { ActivityList } from './components/ActivityList';
+import { Widget } from '../../../common/components/home/Widget';
+import { ActivityList } from '../../../common/components/home/ActivityList';
 import { useGstyle } from '@/Colors';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -21,8 +20,21 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import useDragStore from '@/store/DragStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TopGradient from '@/common/components/home/TopGradient';
+import Header from '@/common/components/home/Headers/Header';
 
-type WidgetItem = { key: string; type: 'widget'; One?: string; Two?: string; Textc: string; Value: string; Icon: string };
+
+type WidgetItem = {
+  key: string;
+  type: 'widget';
+  suf: string;
+  color: string
+  Text: string;
+  typecontent: string;
+  Value: string;
+  Icon: string;
+  time: string;
+};
 type StatsGroupItem = { key: string; type: 'statsGroup'; stats: { color?: string; icon: string; title: string; subtitle: string }[] };
 type ActivityItem = { key: string; type: 'activity' };
 type Item = WidgetItem | StatsGroupItem | ActivityItem;
@@ -75,16 +87,39 @@ export default function Index() {
     ],
   }));
 
-  const defaultGradient = isDark ? ['#1C1C1E', '#2a2a2e'] : ['#fff', '#f0f0f5'];
-
   const [items, setItems] = useState<Item[]>([
-    { key: '1', type: 'widget', One: defaultGradient[0], Two: defaultGradient[1], Textc: 'Середній бал', Value: '12.00', Icon: 'school-outline' },
-    { key: '2', type: 'widget', One: defaultGradient[0], Two: defaultGradient[1], Textc: 'Повідомлення', Value: '0', Icon: 'mail-outline' },
     {
-      key: '3', type: 'statsGroup', stats: [
-        { color: widgetColor, icon: 'book-outline', title: '47', subtitle: 'Завдань на завтра' },
-        { color: widgetColor, icon: 'trophy-outline', title: '1 з 32', subtitle: 'Місце в класі' },
-      ]
+      key: '1',
+      type: 'widget',
+      Text: 'Середній бал',
+      Value: '12.00',
+      Icon: 'star.circle.fill',
+      typecontent: "chart",
+      suf: "Балів",
+      color: "#ff5100ff",
+      time: "66:66"
+    },
+    {
+      key: '2',
+      type: 'widget',
+      Text: 'Повідомлення',
+      Value: '0',
+      Icon: 'mail.fill',
+      typecontent: "lastm",
+      suf: "Непрочитані",
+      color: "#0088ffff",
+      time: "23:49"
+    },
+    {
+      key: '3',
+      type: 'widget',
+      Text: 'Місце в класі',
+      Value: '1 з 32',
+      Icon: 'trophy.fill',
+      typecontent: "lastm",
+      suf: "Місце",
+      color: "#00ff73ff",
+      time: "21:49"
     },
     { key: '4', type: 'activity' },
   ]);
@@ -99,50 +134,51 @@ export default function Index() {
 
   const renderItem = ({ item, drag, isActive }: any) => (
     <ScaleDecorator key={item.key}>
-      <Animated.View
-        entering={ZoomIn.springify()}
-        exiting={ZoomOut.springify()}
-        layout={Layout.springify()}
-        style={[styles.wrapper, wiggleStyle, { opacity: isActive ? 0.8 : 1 }]}
-      >
-        <Pressable
-          disabled={!Drag}
-          onLongPress={() => Drag && Haptics.selectionAsync().then(() => drag())}
+      <View style={styles.wrapper}>
+        <Animated.View
+          entering={ZoomIn.springify()}
+          exiting={ZoomOut.springify()}
+          layout={Layout.springify()}
+          style={{ opacity: isActive ? 0.8 : 1 }}
         >
-          {item.type === 'widget' && (
-            <Widget
-              One={item.One}
-              Two={item.Two}
-              Textc={item.Textc}
-              Value={item.Value}
-              Icon={item.Icon}
-            />
-          )}
-          {item.type === 'statsGroup' && (
-            <View style={styles.statsRow}>
-              {item.stats.map((s: any, i: number) => <StatCard key={i} icon={s.icon} title={s.title} subtitle={s.subtitle} />)}
-            </View>
-          )}
-          {item.type === 'activity' && <ActivityList router={router} />}
-        </Pressable>
-      </Animated.View>
+          <Animated.View style={wiggleStyle}>
+            <Pressable
+              disabled={!Drag}
+              onLongPress={() => Drag && Haptics.selectionAsync().then(() => drag())}
+            >
+              {item.type === 'widget' && (
+                <Widget
+                  suf={item.suf}
+                  color={item.color}
+                  typecontent={item.typecontent}
+                  Text={item.Text}
+                  Value={item.Value}
+                  Icon={item.Icon}
+                  time={item.time}
+                />
+              )}
+              {item.type === 'activity' && <ActivityList router={router} />}
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
+      </View>
     </ScaleDecorator>
   );
 
   return (
     <SafeAreaView style={{ flex: 1, ...gstyles.back }}>
-      <GestureHandlerRootView >
-        <View style={{ flex: 1, marginTop: 16 }}>
-          <DraggableFlatList
-            data={items}
-            onDragEnd={({ data }) => setItems(data)}
-            keyExtractor={(item) => item.key}
-            renderItem={renderItem}
-            activationDistance={Drag ? 1 : 9999}
-            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-            contentContainerStyle={{ paddingBottom: 24 }}
-          />
-        </View>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <TopGradient />
+        <DraggableFlatList
+          data={items}
+          onDragEnd={({ data }) => setItems(data)}
+          keyExtractor={(item) => item.key}
+          renderItem={renderItem}
+          activationDistance={Drag ? 1 : 9999}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+          ListHeaderComponent={<Header />}
+          contentContainerStyle={{ paddingBottom: 24, paddingTop: 50 }}
+        />
       </GestureHandlerRootView>
     </SafeAreaView>
   );

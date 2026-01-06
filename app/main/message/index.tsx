@@ -91,6 +91,8 @@ export default function MessagesScreen() {
                         bottom: bottom + 60,
                     }]}
             >
+
+
                 <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
                     <ContextMenu Menu={menuItems} onPress={() => console.log(123)}>
                         <IconSymbol weight="medium" name="line.3.horizontal.decrease" size={29} color={textColor} />
@@ -113,14 +115,14 @@ export default function MessagesScreen() {
 
                             marginLeft: 8,
                             fontSize: 18,
-                            fontWeight:600,
+                            fontWeight: 600,
                             color: textColor,
                         }}
                     />
                 </GlassView>
 
                 <GlassView isInteractive={true} style={{ padding: 13, borderRadius: 44 }}>
-                    <Pressable onPress={()=>router.push('/modal/sendmessage')}>
+                    <Pressable onPress={() => router.push('/modal/sendmessage')}>
                         <IconSymbol weight="medium" name="square.and.pencil" size={29} color={textColor} />
                     </Pressable>
                 </GlassView>
