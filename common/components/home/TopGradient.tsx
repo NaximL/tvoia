@@ -16,7 +16,7 @@ const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 const TopGradient = () => {
     const { gstyles } = useGstyle();
     const rotation = useSharedValue(0);
-    const palette = useSharedValue(0);
+
 
     useEffect(() => {
         rotation.value = withRepeat(
@@ -24,55 +24,23 @@ const TopGradient = () => {
             -1,
             false
         );
-
-        palette.value = withRepeat(
-            withTiming(1, { duration: 15000 }),
-            -1,
-            true
-        );
     }, []);
 
     const animatedStyle = useAnimatedStyle(() => ({
         transform: [{ rotate: `${rotation.value}deg` }],
-    }));
-
-    const animatedProps = useAnimatedProps<{
-        colors: readonly [ColorValue, ColorValue, ColorValue, ColorValue];
-    }>(() => ({
-        colors: [
-            interpolateColor(
-                palette.value,
-                [0, 1],
-                ['#0A2540', '#1E4D8B']
-            ),
-            interpolateColor(
-                palette.value,
-                [0, 1],
-                ['#1B3B6F', '#6D3A7C']
-            ),
-            interpolateColor(
-                palette.value,
-                [0, 1],
-                ['#3A2A6A', '#8B3A3A']
-            ),
-            interpolateColor(
-                palette.value,
-                [0, 1],
-                ['#5B2B82', '#2A1F3D']
-            ),
-        ],
     }));
     return (
         <>
             <View
                 style={{
                     position: "absolute",
-                    top: -300,
+                    top: -100,
                     left: -150,
                     right: -150,
-                    height: 600,
+                    // width:100,
+                    height: 400,
                     overflow: "hidden",
-                    
+
                 }}
             >
                 <Animated.View
@@ -86,8 +54,8 @@ const TopGradient = () => {
                     ]}
                 >
                     <AnimatedLinearGradient
-                        colors={['#000', '#000', '#000', '#000']}
-                        animatedProps={animatedProps}
+                        colors={['#0A2540', '#1B3B6F', '#3A2A6A', '#5B2B82']}
+                        // colors={['#0A2540', '#000000ff', '#ffffffff', '#ffffffff']}
                         locations={[0, 0.35, 0.65, 1]}
                         start={{ x: 0.5, y: 0 }}
                         end={{ x: 0.5, y: 1 }}

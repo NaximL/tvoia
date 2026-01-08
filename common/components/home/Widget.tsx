@@ -17,21 +17,23 @@ type Props = {
 };
 
 export const Widget = ({ typecontent, color, suf, Text: Texts, Value, Icon, time }: Props) => {
-  const { isDark } = useGstyle();
+  const safeColor = typeof color === 'string' ? color : '#8b8b8bff';
+
   const data = [
     { value: 20, color: "#8b8b8bff" },
-    { value: 45, color: color },
+    { value: 45, color: safeColor },
     { value: 28, color: "#8b8b8bff" },
     { value: 43, color: "#8b8b8bff" },
     { value: 6, color: "#8b8b8bff" },
     { value: 30, color: "#8b8b8bff" },
   ];
 
-
   const CustomBar = ({ x, y, bandwidth, data }: any) => (
     <G>
       {data.map((item: any, index: number) => {
         const barHeight = y(0) - y(item.value);
+        const barColor = typeof item.color === 'string' ? item.color : '#8b8b8bff';
+
         return (
           <Rect
             key={index}
@@ -41,7 +43,7 @@ export const Widget = ({ typecontent, color, suf, Text: Texts, Value, Icon, time
             height={barHeight}
             rx={3}
             ry={3}
-            fill={item.color}
+            fill={barColor}
           />
         );
       })}
@@ -52,8 +54,8 @@ export const Widget = ({ typecontent, color, suf, Text: Texts, Value, Icon, time
     <View style={styles.card}>
       <View style={styles.Top}>
         <View style={styles.Row}>
-          <IconSymbol color={color} name={Icon} size={20} />
-          <Text style={[{ color: color }, styles.TopLeftText]}>{Texts}</Text>
+          <IconSymbol color={safeColor} name={Icon ?? 'circle'} size={20} />
+          <Text style={[{ color: safeColor }, styles.TopLeftText]}>{Texts}</Text>
         </View>
         <View style={styles.Row}>
           <Text style={{ color: "#888888ff", fontSize: 14 }}>{time}</Text>
