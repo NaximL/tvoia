@@ -1,13 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { Router } from 'expo-router';
+
 import { useGstyle } from '@/Colors';
-import { IconSymbol } from '@/common/ui/Icon';
 
-export const ActivityList = ({ router }: { router: Router }) => {
+export const ActivityList = () => {
   const { gstyles, isDark } = useGstyle();
-
+  
   const gradeColor: Record<string, string> = isDark
     ? {
       Н: "#FF3B30",
@@ -52,44 +50,50 @@ export const ActivityList = ({ router }: { router: Router }) => {
     { id: '3', date: '20 березня', subject: 'Фізика — рух тіла', type: 'Контрольна робота', grade: 8 },
   ];
 
-  return (
-    <View style={[styles.container, gstyles.widgetColor]}
-    >
-      <Pressable style={{
-        flexDirection: "row",
-        alignItems:"center",
-        marginBottom: 12,
-      }} onPress={() => router.push('/modal/diary')}>
-        <Text style={[styles.title, { color: isDark ? '#fff' : '#000' }]}>Оцінки</Text>
-        <IconSymbol name='chevron.right' weight='bold' size={18} color={isDark ? '#fff' : '#000'} />
-      </Pressable>
-
-      {
-        activities.map((item, index) => (
-          <View key={index} style={[styles.item, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0' }]}>
-            <View style={{ width: '85%' }}>
-              <Text style={[styles.date, { color: isDark ? '#888' : '#666' }]}>{item.date}</Text>
-              <Text style={[styles.subject, { color: isDark ? '#fff' : '#000' }]}>{item.subject}</Text>
-              <Text style={[styles.type, { color: isDark ? '#aaa' : '#444' }]}>{item.type}</Text>
-            </View>
-
-            <View style={[styles.gradeBadge, { backgroundColor: gradeColor[item.grade] || '#6C63FF' }]}>
-              <Text style={styles.gradeText}>{item.grade}</Text>
-            </View>
+  return <View style={styles.container}>
+    {
+      activities.map((item, index) => (
+        <View key={index} style={[styles.item, { backgroundColor: isDark ? 'rgba(255,255,255,0.05)' : '#f0f0f0' }]}>
+          <View style={{ width: '85%' }}>
+            <Text style={[styles.date, { color: isDark ? '#888' : '#666' }]}>{item.date}</Text>
+            <Text style={[styles.subject, { color: isDark ? '#fff' : '#000' }]}>{item.subject}</Text>
+            <Text style={[styles.type, { color: isDark ? '#aaa' : '#444' }]}>{item.type}</Text>
           </View>
-        ))
-      }
-    </View >
-  );
+
+          <View style={[styles.gradeBadge, { backgroundColor: gradeColor[item.grade] || '#6C63FF' }]}>
+            <Text style={styles.gradeText}>{item.grade}</Text>
+          </View>
+        </View>
+      ))
+    }
+  </View>
 };
 
 const styles = StyleSheet.create({
-  container: { borderRadius: 32, marginHorizontal: 16, padding: 20, shadowColor: '#000', shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.1, shadowRadius: 10 },
-  title: { fontSize: 22, fontWeight: '700',marginBottom:2 },
+  container: {
+    flexDirection: "column",
+    marginTop: 10
+  },
+  title: { fontSize: 22, fontWeight: '700', marginBottom: 2 },
   item: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 14, borderRadius: 16, marginBottom: 10 },
   date: { fontSize: 13 },
   subject: { fontSize: 16, fontWeight: '600', marginTop: 2 },
   type: { fontSize: 13 },
   gradeBadge: { width: 42, height: 42, borderRadius: 12, justifyContent: 'center', alignItems: 'center', shadowColor: '#000', shadowOpacity: 0.25, shadowRadius: 6 },
   gradeText: { color: 'white', fontWeight: '700', fontSize: 18 },
+
+
+  Top: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  Row: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 3,
+  },
+  TopLeftText: {
+    fontSize: 18,
+    fontWeight: "600",
+  },
 });

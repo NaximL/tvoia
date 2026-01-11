@@ -1,7 +1,7 @@
 import { useGstyle } from "@/Colors";
 import { Image, StyleSheet, Text, View } from "react-native";
 import BottomHeader from "./BottomHeader";
-import TopGradient from "../TopGradient";
+import TopGradient from "./TopGradient";
 
 
 const Header = () => {

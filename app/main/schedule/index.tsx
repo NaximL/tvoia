@@ -205,7 +205,6 @@ const Schedule = () => {
                         </ContextMenu>
                     </View>
                 </View>
-
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, RefreshControl, Alert, Pressable } from 'react-native';
-import { Widget } from '../../../common/components/home/Widget';
+import React, { useState, useEffect, ReactNode } from 'react';
+import { View, StyleSheet, RefreshControl, Alert, Pressable, Text } from 'react-native';
+import { Widget } from '../../../common/components/home/Widgets/Widget';
 import { ActivityList } from '../../../common/components/home/ActivityList';
 import { useGstyle } from '@/Colors';
 import DraggableFlatList, { ScaleDecorator } from 'react-native-draggable-flatlist';
@@ -20,24 +20,25 @@ import * as Haptics from 'expo-haptics';
 import { useRouter } from 'expo-router';
 import useDragStore from '@/store/DragStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TopGradient from '@/common/components/home/TopGradient';
+import TopGradient from '@/common/components/home/Headers/TopGradient';
 import Header from '@/common/components/home/Headers/Header';
+import Message from '@/common/components/home/Widgets/Bodys/Message';
+import Chart from '@/common/components/home/Widgets/Bodys/Right/Chart';
+import TextLeft from '@/common/components/home/Widgets/Bodys/TextLeft';
 
 
+type Head = {
+  Icon: any;
+  Text: string;
+  time: string;
+}
 type WidgetItem = {
   key: string;
-  type: 'widget';
-  suf: string;
-  color: string
-  Text: string;
-  typecontent: string;
-  Value: string;
-  Icon: string;
-  time: string;
+  Head: Head;
+  commponent: React.JSX.Element;
+  color: string;
 };
-type StatsGroupItem = { key: string; type: 'statsGroup'; stats: { color?: string; icon: string; title: string; subtitle: string }[] };
-type ActivityItem = { key: string; type: 'activity' };
-type Item = WidgetItem | StatsGroupItem | ActivityItem;
+
 
 export default function Index() {
   const { gstyles, isDark, widgetColor } = useGstyle();
@@ -87,47 +88,93 @@ export default function Index() {
     ],
   }));
 
-  const [items, setItems] = useState<Item[]>([
+  const [items, setItems] = useState<WidgetItem[]>([
     {
       key: '1',
-      type: 'widget',
-      Text: 'Середній бал',
-      Value: '12.00',
-      Icon: 'star.circle.fill',
-      typecontent: "chart",
-      suf: "Балів",
       color: "#ff5100ff",
-      time: "66:66"
+      Head: {
+        Icon: 'star.circle.fill',
+        Text: 'Середній бал',
+        time: "00:00",
+      },
+      commponent:
+        <TextLeft
+          value='12.00'
+          suffix='Балів'
+        >
+          <Chart
+            data={[
+              { value: 20, color: "#8b8b8bff" },
+              { value: 10, color: "#8b8b8bff" },
+              { value: 28, color: "#8b8b8bff" },
+              { value: 43, color: "rgb(208, 51, 45)" },
+              { value: 6, color: "#8b8b8bff" },
+              { value: 30, color: "#8b8b8bff" },
+            ]}
+
+          />
+        </TextLeft>,
     },
     {
       key: '2',
-      type: 'widget',
-      Text: 'Повідомлення',
-      Value: '0',
-      Icon: 'mail.fill',
-      typecontent: "lastm",
-      suf: "Непрочитані",
       color: "#0088ffff",
-      time: "23:49"
+      Head: {
+        Icon: 'mail.fill',
+        Text: 'Повідомлення',
+        time: "23:49"
+      },
+      commponent:
+        <TextLeft
+          value='0'
+          suffix='Непрочитані'
+        >
+          <Message messages={
+            [
+              {
+                who: "Олексій Яременко",
+                body: "Люблю свою сімку"
+              },
+              {
+                who: "Олексій Яременко Яременко",
+                body: "Люблю свою сімку"
+              },
+              {
+                who: "Олексій Яременко",
+                body: "Люблю свою сімкуЛюблю свою сімку"
+              },
+            ]} />
+        </TextLeft>,
     },
     {
       key: '3',
-      type: 'widget',
-      Text: 'Місце в класі',
-      Value: '1 з 32',
-      Icon: 'trophy.fill',
-      typecontent: "lastm",
-      suf: "Місце",
       color: "#00ff73ff",
-      time: "21:49"
+      Head: {
+        Icon: 'trophy.fill',
+        Text: 'Місце в класі',
+        time: "21:49"
+      },
+      commponent: <TextLeft
+        value='1 з 31'
+        suffix='Місце'
+      >
+      </TextLeft>,
     },
-    { key: '4', type: 'activity' },
+    {
+      key: '4',
+      color: "rgb(0, 183, 255)",
+      Head: {
+        Icon: 'graduationcap.fill',
+        Text: 'Остані оцінки',
+        time: "21:49"
+      },
+      commponent: <ActivityList />,
+    }
   ]);
 
   const onRefresh = () => {
     setRefreshing(true);
     setTimeout(() => {
-      Alert.alert('🔄 Оновлено', 'Дані успішно перезавантажені!');
+      Alert.alert('🔄 Оновлено', 'Дані ускпішно перезавантажені!');
       setRefreshing(false);
     }, 1200);
   };
@@ -146,18 +193,9 @@ export default function Index() {
               disabled={!Drag}
               onLongPress={() => Drag && Haptics.selectionAsync().then(() => drag())}
             >
-              {item.type === 'widget' && (
-                <Widget
-                  suf={item.suf}
-                  color={item.color}
-                  typecontent={item.typecontent}
-                  Text={item.Text}
-                  Value={item.Value}
-                  Icon={item.Icon}
-                  time={item.time}
-                />
-              )}
-              {item.type === 'activity' && <ActivityList router={router} />}
+              <Widget item={item} >
+                {item.commponent}
+              </Widget>
             </Pressable>
           </Animated.View>
         </Animated.View>

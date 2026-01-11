@@ -35,7 +35,7 @@ const GlassView = ({ style, children, isInteractive, tint, glassEffectStyle }: P
                             overflow:"hidden",
                             borderWidth:1,
                             borderColor: isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0, 0, 0, 0.1)',
-                            backgroundColor: isDark ? 'rgba(60, 60, 60, 0.165)' : 'rgba(255, 255, 255, 0.5)',
+                            backgroundColor: isDark ? 'rgba(139, 139, 139, 0.17)' : 'rgba(255, 255, 255, 0.5)',
                         }
                     }
                 >

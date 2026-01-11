@@ -19,9 +19,9 @@ export const useGstyle = () => {
   const SearchBarColor = isDark ? "#2c2c2eff" : "#e5e5ea";
 
   const NavBarTint = accentColor;
-  
-  const LiquidGlass = isLiquidGlassAvailable()
-  
+
+  const LiquidGlass = isLiquidGlassAvailable();
+
   const gstyles = StyleSheet.create({
     back: { backgroundColor },
     widgetColor: { backgroundColor: widgetColor },

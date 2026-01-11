@@ -9,7 +9,6 @@ import Animated, {
     interpolateColor,
     useAnimatedProps,
 } from "react-native-reanimated";
-import type { ColorValue } from "react-native";
 import { useGstyle } from "@/Colors";
 const AnimatedLinearGradient = Animated.createAnimatedComponent(LinearGradient);
 
@@ -54,7 +53,8 @@ const TopGradient = () => {
                     ]}
                 >
                     <AnimatedLinearGradient
-                        colors={['#0A2540', '#1B3B6F', '#3A2A6A', '#5B2B82']}
+                        colors={['#1E4D8B', '#6D3A7C', '#8B3A3A', '#2A1F3D']}
+                        // colors={['#0A2540', '#1B3B6F', '#3A2A6A', '#5B2B82']}
                         // colors={['#0A2540', '#000000ff', '#ffffffff', '#ffffffff']}
                         locations={[0, 0.35, 0.65, 1]}
                         start={{ x: 0.5, y: 0 }}
